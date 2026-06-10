@@ -5,6 +5,10 @@ import { useHasHover } from '../hooks/useHasHover'
 interface SprayCanvasProps {
   /** Neon spray colours, cycled as the cursor moves. */
   colors?: string[]
+  /** Peak opacity of each airbrush burst — raise it for light backgrounds. */
+  maxAlpha?: number
+  /** Radius of the live airbrush cloud, in px. */
+  radius?: number
   className?: string
 }
 
@@ -24,6 +28,8 @@ const DEFAULT_COLORS = ['#3DF03D', '#FF2D78', '#FF5A1F', '#1A4BE8']
  */
 export default function SprayCanvas({
   colors = DEFAULT_COLORS,
+  maxAlpha = 0.05,
+  radius = 26,
   className = '',
 }: SprayCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -95,7 +101,7 @@ export default function SprayCanvas({
             color,
             64 + Math.random() * 46,
             200,
-            0.05,
+            maxAlpha,
           )
         }
       })
@@ -172,7 +178,7 @@ export default function SprayCanvas({
 
       colorIndex = (colorIndex + 0.02) % colors.length
       const color = colors[Math.floor(colorIndex)]
-      sprayBurst(curX, curY, color, 26, Math.floor(64 * intensity), 0.05)
+      sprayBurst(curX, curY, color, radius, Math.floor(64 * intensity), maxAlpha)
 
       // Occasional running drip for the wet-paint feel.
       if (Math.random() < 0.04 * intensity) {
@@ -194,7 +200,7 @@ export default function SprayCanvas({
       window.removeEventListener('pointermove', onMove)
       ro.disconnect()
     }
-  }, [reduced, hasHover, colors])
+  }, [reduced, hasHover, colors, maxAlpha, radius])
 
   return (
     <canvas

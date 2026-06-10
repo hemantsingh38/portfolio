@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import type { CSSProperties } from 'react'
 import { motion, useInView } from 'framer-motion'
 import LazyImage from '../components/LazyImage'
 import SprayCanvas from '../components/SprayCanvas'
@@ -22,27 +21,20 @@ import { useHasHover } from '../hooks/useHasHover'
 // Pink aerosol — one hue family so it reads as a single magenta cloud on white.
 const SPRAY_COLORS = ['#FF2D78', '#FF1F6F', '#FF4D90']
 
-// Baked pink mass, weighted toward the photo side so the left copy stays clean.
-const BLOB: CSSProperties = {
-  background:
-    'radial-gradient(42% 50% at 60% 44%, rgba(255,45,120,0.32), rgba(255,45,120,0.12) 56%, transparent 74%),' +
-    'radial-gradient(22% 26% at 52% 58%, rgba(255,31,111,0.38), transparent 70%)',
-  filter: 'blur(3px)',
-}
-
-// Random-feeling scatter for the memory photos (lg+). Kept to the right side
-// so the left body column stays clear; the container holds a min-height.
+// Uniform photos scattered at random positions (lg+) — same size, no rotation.
+// Kept to the right side so the left body column stays clear.
+const PHOTO_W = 150
+const PHOTO_ASPECT = 'aspect-[4/5]'
 const SCATTER = [
-  { top: '0%', left: '49%', w: 200, rot: -3 },
-  { top: '22%', left: '73%', w: 150, rot: 4 },
-  { top: '4%', left: '84%', w: 114, rot: -6 },
-  { top: '42%', left: '54%', w: 178, rot: 2.5 },
-  { top: '55%', left: '80%', w: 138, rot: -4 },
-  { top: '72%', left: '57%', w: 196, rot: 3 },
-  { top: '68%', left: '85%', w: 112, rot: -2 },
-  { top: '31%', left: '48%', w: 120, rot: 5 },
+  { top: '0%', left: '49%' },
+  { top: '14%', left: '74%' },
+  { top: '26%', left: '55%' },
+  { top: '40%', left: '78%' },
+  { top: '44%', left: '49%' },
+  { top: '62%', left: '67%' },
+  { top: '70%', left: '83%' },
+  { top: '76%', left: '50%' },
 ]
-const ASPECT = ['aspect-[4/5]', 'aspect-[3/2]', 'aspect-square', 'aspect-[4/5]', 'aspect-[3/2]', 'aspect-[5/4]', 'aspect-[4/5]', 'aspect-square']
 
 // Small abstract red pixel cluster (the "8-bit" micro-graphic).
 const PIXELS = [
@@ -99,9 +91,8 @@ export default function AboutSection() {
       aria-label="About"
       className="relative overflow-hidden bg-white text-ink"
     >
-      {/* Baked pink mass + live aerosol that follows the cursor */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={BLOB} />
-      <SprayCanvas colors={SPRAY_COLORS} className="absolute inset-0 z-0 h-full w-full" />
+      {/* Live pink aerosol that follows the cursor — no static blob */}
+      <SprayCanvas colors={SPRAY_COLORS} maxAlpha={0.13} radius={34} className="absolute inset-0 z-0 h-full w-full" />
 
       {/* Scattered micro-graphics, kept to the margins/gutter */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
@@ -212,12 +203,12 @@ export default function AboutSection() {
                 <figure
                   key={i}
                   className="pointer-events-auto absolute"
-                  style={{ top: s.top, left: s.left, width: s.w, transform: `rotate(${s.rot}deg)` }}
+                  style={{ top: s.top, left: s.left, width: PHOTO_W }}
                 >
                   <LazyImage
                     src={g.src}
                     alt={g.caption ?? 'A memory'}
-                    className={`w-full ring-1 ring-ink-15 ${ASPECT[i % ASPECT.length]}`}
+                    className={`w-full ring-1 ring-ink-15 ${PHOTO_ASPECT}`}
                     imgClassName="object-cover"
                   />
                   <PhotoCaption n={i + 1} year={g.year} caption={g.caption} />
@@ -229,11 +220,11 @@ export default function AboutSection() {
           {/* ── Right photos collapse into a loose grid on small screens ── */}
           <div className="mt-14 grid grid-cols-2 gap-x-5 gap-y-9 sm:grid-cols-3 lg:hidden">
             {about.gallery.map((g, i) => (
-              <figure key={i} style={{ transform: `rotate(${(i % 2 ? 1 : -1) * 1.8}deg)` }}>
+              <figure key={i}>
                 <LazyImage
                   src={g.src}
                   alt={g.caption ?? 'A memory'}
-                  className={`w-full ring-1 ring-ink-15 ${ASPECT[i % ASPECT.length]}`}
+                  className={`w-full ring-1 ring-ink-15 ${PHOTO_ASPECT}`}
                   imgClassName="object-cover"
                 />
                 <PhotoCaption n={i + 1} year={g.year} caption={g.caption} />
