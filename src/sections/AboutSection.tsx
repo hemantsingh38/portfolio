@@ -3,60 +3,62 @@ import type { CSSProperties } from 'react'
 import { motion, useInView } from 'framer-motion'
 import LazyImage from '../components/LazyImage'
 import SprayCanvas from '../components/SprayCanvas'
-import { about, siteConfig } from '../data/portfolio'
+import { projects, about, siteConfig } from '../data/portfolio'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { useHasHover } from '../hooks/useHasHover'
 
 /**
- * About — a dark "graffiti wall" zone.
+ * About — a bright white magazine "contents" spread.
  *
- * Composition:
- *  • Near-black concrete surface, paper text reversed
- *  • SprayCanvas: neon aerosol that follows the cursor (static when reduced)
- *  • Scattered micro-graphics — registration marks, arrows, asterisks
- *  • Oversized ultra-condensed "ABOUT" lockup (Anton), tight tracking
- *  • Taped-up contact sheet of small studio pictures
- *  • Running bio + colophon set in compact condensed grotesque (Oswald)
+ * Homage to the Reconnect (Kern FW21) contents page:
+ *  • White paper, ink type, generous right-hand white space
+ *  • A soft pink aerosol blob that builds up under the cursor (SprayCanvas)
+ *    over a baked CSS base blob, so a magenta mass is always on the page
+ *  • A tight-tracked bold caps contents list with small page numbers; one
+ *    entry flagged in accent like the printed "ME / WE"
+ *  • Inline thumbnails pinned beside entries
+ *  • Scattered micro-graphics — a red pixel block, an orange chip, a maze
+ *  • A barely-legible micro-type column down the far margin
  */
 
-// Stable references (kept out of render so SprayCanvas' effect deps don't churn).
-const SPRAY_COLORS = ['#3DF03D', '#FF2D78', '#FF5A1F', '#1A4BE8']
+// Pink aerosol — one hue family so it reads as a single magenta cloud on white.
+const SPRAY_COLORS = ['#FF2D78', '#FF1F6F', '#FF4D90']
 
-// Per-thumbnail tilt + vertical offset for the pinned-photo collage feel.
-const TILT = [-4, 2.5, -1.5, 3.5, -2.5, 1.5, -3, 2]
-const OFFSET = ['mt-0', 'mt-7', 'mt-3', 'mt-8', 'mt-2', 'mt-6', 'mt-1', 'mt-5']
+// The six projects become the left "contents", with ascending page numbers.
+const PAGES = ['14', '23', '30', '40', '54', '72']
+// Which entries carry an inline thumbnail (mirrors the print mix).
+const THUMB_AT = new Set([0, 2, 4])
+// me-we is index 4 — flagged accent, echoing the printed red "ME / WE".
+const ACCENT_AT = 4
 
-type Deco = {
-  c: string
-  top: string
-  left: string
-  rot: number
-  size: number
-  color: string
-  opacity?: number
+// Baked pink mass — always present, so the page matches the reference even
+// before the cursor moves. The canvas then sprays live texture on top.
+const BLOB: CSSProperties = {
+  background:
+    'radial-gradient(40% 48% at 33% 42%, rgba(255,45,120,0.40), rgba(255,45,120,0.16) 56%, transparent 72%),' +
+    'radial-gradient(20% 24% at 44% 52%, rgba(255,31,111,0.46), transparent 70%)',
+  filter: 'blur(3px)',
 }
 
-// Scattered micro-graphics — kept mostly to the margins so they frame, not cover.
-const DECOS: Deco[] = [
-  { c: '✳', top: '7%', left: '3%', rot: -12, size: 30, color: '#3DF03D' },
-  { c: '→', top: '13%', left: '90%', rot: 16, size: 34, color: '#FF2D78' },
-  { c: '＋', top: '5%', left: '57%', rot: 20, size: 24, color: '#FF5A1F', opacity: 0.7 },
-  { c: '⊕', top: '38%', left: '95%', rot: 0, size: 26, color: '#F7F5F0', opacity: 0.45 },
-  { c: '✦', top: '52%', left: '1.5%', rot: 14, size: 24, color: '#FF2D78' },
-  { c: '✕', top: '69%', left: '5%', rot: 8, size: 26, color: '#FF5A1F' },
-  { c: '◆', top: '83%', left: '93%', rot: -6, size: 20, color: '#1A4BE8' },
-  { c: '↗', top: '92%', left: '44%', rot: 0, size: 28, color: '#3DF03D' },
-  { c: '●', top: '30%', left: '49%', rot: 0, size: 10, color: '#FF2D78' },
-  { c: '✲', top: '60%', left: '88%', rot: -18, size: 22, color: '#F7F5F0', opacity: 0.5 },
+// Small abstract red pixel cluster (the "8-bit" micro-graphic).
+const PIXELS = [
+  [1, 0, 1, 1, 0],
+  [1, 1, 0, 1, 1],
+  [0, 1, 1, 0, 1],
+  [1, 0, 1, 1, 0],
+  [1, 1, 0, 1, 1],
 ]
 
-// Near-black concrete: a fine speckle plus a soft top vignette.
-const CONCRETE: CSSProperties = {
-  backgroundColor: '#0b0b0d',
-  backgroundImage:
-    'radial-gradient(rgba(255,255,255,0.05) 0.5px, transparent 0.6px), radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,0.045), transparent 60%)',
-  backgroundSize: '3px 3px, 100% 100%',
-}
+type Mark = { c: string; top: string; left: string; rot: number; size: number; color: string; o?: number }
+const MARKS: Mark[] = [
+  { c: '✳', top: '6%', left: '2%', rot: -12, size: 22, color: '#1A4BE8', o: 0.8 },
+  { c: '→', top: '4%', left: '46%', rot: 0, size: 20, color: '#141414', o: 0.55 },
+  { c: '✦', top: '40%', left: '1%', rot: 14, size: 18, color: '#FF2D78' },
+  { c: '＋', top: '88%', left: '4%', rot: 0, size: 18, color: '#FF5A1F', o: 0.8 },
+  { c: '◆', top: '70%', left: '52%', rot: 0, size: 10, color: '#3DF03D' },
+  { c: '✕', top: '12%', left: '93%', rot: 8, size: 18, color: '#141414', o: 0.5 },
+  { c: '↗', top: '95%', left: '60%', rot: 0, size: 20, color: '#1A4BE8', o: 0.7 },
+]
 
 export default function AboutSection() {
   const reduced = usePrefersReducedMotion()
@@ -66,146 +68,161 @@ export default function AboutSection() {
 
   const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
   const rise = (delay: number) => ({
-    initial: { opacity: 0, y: reduced ? 0 : 24 },
+    initial: { opacity: 0, y: reduced ? 0 : 20 },
     animate: inView ? { opacity: 1, y: 0 } : {},
     transition: { duration: reduced ? 0.15 : 0.7, delay: reduced ? 0 : delay, ease },
   })
+
+  const sideMeta = about.colophon.map((c) => `${c.label} — ${c.value}`).join('   ·   ')
 
   return (
     <section
       id="about"
       ref={ref}
       aria-label="About"
-      className="relative overflow-hidden text-paper"
-      style={CONCRETE}
+      className="relative overflow-hidden bg-white text-ink"
     >
-      {/* Wet-paint wall — follows the cursor */}
+      {/* Baked pink mass + live aerosol that follows the cursor */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={BLOB} />
       <SprayCanvas colors={SPRAY_COLORS} className="absolute inset-0 z-0 h-full w-full" />
 
-      {/* Scattered micro-graphics */}
+      {/* Scattered micro-graphics, kept to the margins so they frame, not cover */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
-        {DECOS.map((d, i) => (
+        {MARKS.map((m, i) => (
           <span
             key={i}
-            className="absolute font-stencil leading-none"
-            style={{
-              top: d.top,
-              left: d.left,
-              transform: `rotate(${d.rot}deg)`,
-              fontSize: d.size,
-              color: d.color,
-              opacity: d.opacity ?? 0.85,
-            }}
+            className="absolute font-tight leading-none"
+            style={{ top: m.top, left: m.left, transform: `rotate(${m.rot}deg)`, fontSize: m.size, color: m.color, opacity: m.o ?? 1 }}
           >
-            {d.c}
+            {m.c}
           </span>
         ))}
-        <span className="vertical-rl absolute right-3 top-1/2 -translate-y-1/2 font-grotesk text-[11px] uppercase tracking-[0.15em] text-paper-40">
-          About — Vol. MMXXVI
+
+        {/* Red pixel block */}
+        <svg className="absolute hidden sm:block" style={{ top: '9%', left: '40%' }} width="36" height="36" viewBox="0 0 36 36">
+          {PIXELS.flatMap((row, y) =>
+            row.map((on, x) => (on ? <rect key={`${x}-${y}`} x={x * 7} y={y * 7} width="6.4" height="6.4" fill="#FF3B1E" /> : null)),
+          )}
+        </svg>
+
+        {/* Orange→yellow chip */}
+        <div className="absolute hidden h-10 w-16 sm:block" style={{ top: '30%', left: '36%', background: 'linear-gradient(150deg,#FF5A1F,#FFC400)' }} />
+
+        {/* Tangled maze / scribble */}
+        <svg className="absolute hidden lg:block" style={{ top: '82%', left: '90%' }} width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="#141414" strokeWidth="2">
+          <path d="M2 6h12v12H6v12h18V6h12v28h12V14H50" />
+          <path d="M2 34h8M30 34h22" />
+        </svg>
+
+        {/* Far-margin micro-type column */}
+        <span className="vertical-rl absolute left-1.5 top-28 hidden font-tight text-[9px] uppercase tracking-[0.14em] text-ink-40 lg:block">
+          {sideMeta}
         </span>
       </div>
 
       <div className="spread relative z-10 py-20 sm:py-28">
-        {/* Eyebrow */}
+        {/* Running header */}
         <motion.div
           {...rise(0)}
-          className="flex items-end justify-between border-b border-paper-15 pb-4"
+          className="flex items-end justify-between border-b border-ink-15 pb-3 font-tight text-[10px] font-medium uppercase tracking-[0.16em] text-ink-60"
         >
-          <span className="font-grotesk text-[11px] uppercase tracking-[0.04em] text-paper-60">
-            Colophon · About
-          </span>
-          <span className="font-grotesk text-[11px] uppercase tracking-[0.04em] text-paper-60">
-            {siteConfig.name}
-          </span>
+          <span>Contents — About</span>
+          <span>{siteConfig.issue}</span>
         </motion.div>
 
-        {/* Oversized condensed lockup */}
-        <motion.header {...rise(0.06)} className="mt-8 sm:mt-10">
-          <h2
-            className="font-stencil uppercase leading-[0.82] tracking-[-0.02em]"
-            style={{ fontSize: 'clamp(4rem, 18vw, 15rem)' }}
-          >
-            Abo<span style={{ color: '#3DF03D' }}>u</span>t
-          </h2>
-          <p className="mt-6 max-w-[44ch] font-grotesk text-xl font-light leading-[1.15] tracking-[-0.01em] text-paper sm:text-2xl">
-            {about.intro}
-          </p>
-          {hasHover && !reduced && (
-            <p className="mt-5 font-grotesk text-[11px] uppercase tracking-[0.12em] text-paper-40">
-              <span style={{ color: '#FF2D78' }}>✲</span> move your cursor — the
-              wall is still wet
-            </p>
-          )}
-        </motion.header>
+        <div className="mt-12 grid gap-x-12 gap-y-16 lg:grid-cols-2">
+          {/* ── Left: the contents list ─────────────────────────────── */}
+          <motion.ol {...rise(0.06)} className="space-y-9">
+            {projects.map((p, i) => {
+              const accent = i === ACCENT_AT
+              return (
+                <li key={p.id} className="max-w-[20ch]">
+                  <span
+                    className="block font-tight text-[12px] font-medium tabular-nums tracking-tight"
+                    style={accent ? { color: '#FF2D78' } : { color: 'rgba(20,20,20,0.55)' }}
+                  >
+                    {PAGES[i]}
+                  </span>
+                  <h3
+                    className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]"
+                    style={{ fontSize: 'clamp(1.4rem,3.2vw,2.5rem)', color: accent ? '#FF2D78' : undefined }}
+                  >
+                    {p.title}
+                  </h3>
+                  {THUMB_AT.has(i) && (
+                    <LazyImage
+                      src={p.coverImage}
+                      alt={p.title}
+                      className="mt-3 w-32 ring-1 ring-ink-15"
+                      imgClassName="aspect-[5/4] object-cover"
+                    />
+                  )}
+                </li>
+              )
+            })}
+          </motion.ol>
 
-        {/* Taped-up contact sheet */}
-        <motion.div
-          {...rise(0.12)}
-          className="mt-14 grid grid-cols-2 gap-x-4 gap-y-7 sm:grid-cols-3 lg:grid-cols-4"
-        >
-          {about.gallery.map((g, i) => (
-            <figure
-              key={i}
-              className={`group ${OFFSET[i % OFFSET.length]}`}
-              style={{ transform: `rotate(${TILT[i % TILT.length]}deg)` }}
-            >
-              <div className="relative">
-                <span
-                  aria-hidden
-                  className="absolute -top-2 left-1/2 z-10 h-4 w-12 -translate-x-1/2 -rotate-3 bg-paper/20 backdrop-blur-[1px]"
-                />
-                <LazyImage
-                  src={g.src}
-                  alt={g.caption ?? 'Studio image'}
-                  className="aspect-[4/5] w-full ring-1 ring-paper-15"
-                  imgClassName="object-cover grayscale contrast-[1.1] transition duration-500 group-hover:grayscale-0"
-                />
-              </div>
-              {g.caption && (
-                <figcaption className="mt-2 font-grotesk text-[10px] uppercase tracking-[0.06em] text-paper-40">
-                  {String(i + 1).padStart(2, '0')} · {g.caption}
-                </figcaption>
-              )}
-            </figure>
-          ))}
-        </motion.div>
-
-        {/* Running bio */}
-        <motion.div {...rise(0.16)} className="mt-16 border-t border-paper-15 pt-10">
-          <div className="columns-1 gap-10 lg:columns-2 [&>p]:mb-5 [&>p]:break-inside-avoid">
-            {about.bio.map((para, i) => (
-              <p
-                key={i}
-                className="font-grotesk text-base font-light leading-[1.5] tracking-[-0.005em] text-paper sm:text-lg"
-              >
-                {para}
+          {/* ── Right: the About content, set as numbered blocks ────── */}
+          <div className="space-y-12 lg:pl-6">
+            <motion.div {...rise(0.12)}>
+              <span className="block font-tight text-[12px] font-medium tabular-nums tracking-tight text-ink-60">86</span>
+              <h3 className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]" style={{ fontSize: 'clamp(1.4rem,3.2vw,2.5rem)' }}>
+                About
+              </h3>
+              <p className="mt-4 max-w-[42ch] font-tight text-lg font-light leading-[1.25] tracking-[-0.01em] text-ink sm:text-xl">
+                {about.intro}
               </p>
-            ))}
-          </div>
-        </motion.div>
+              {hasHover && !reduced && (
+                <p className="mt-4 font-tight text-[11px] uppercase tracking-[0.12em] text-ink-40">
+                  <span style={{ color: '#FF2D78' }}>✲</span> move your cursor — the paint is still wet
+                </p>
+              )}
+            </motion.div>
 
-        {/* Colophon */}
-        <motion.section
-          {...rise(0.22)}
-          aria-label="Colophon"
-          className="mt-16 border-t border-paper-15 pt-6"
-        >
-          <p className="mb-6 font-grotesk text-[11px] uppercase tracking-[0.06em] text-paper-40">
-            Colophon
-          </p>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-6">
-            {about.colophon.map((c) => (
-              <div key={c.label}>
-                <dt className="font-grotesk text-[10px] uppercase tracking-[0.06em] text-paper-40">
-                  {c.label}
-                </dt>
-                <dd className="mt-1 font-grotesk text-sm font-medium leading-snug tracking-[-0.01em] text-paper">
-                  {c.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </motion.section>
+            <motion.div {...rise(0.16)}>
+              <span className="block font-tight text-[12px] font-medium tabular-nums tracking-tight text-ink-60">105</span>
+              <h3 className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]" style={{ fontSize: 'clamp(1.1rem,2.2vw,1.6rem)' }}>
+                Colophon
+              </h3>
+              <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3">
+                {about.colophon.map((c) => (
+                  <div key={c.label}>
+                    <dt className="font-tight text-[10px] uppercase tracking-[0.12em] text-ink-40">{c.label}</dt>
+                    <dd className="mt-0.5 font-tight text-sm font-medium leading-snug tracking-[-0.01em]">{c.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </motion.div>
+
+            <motion.div {...rise(0.2)}>
+              <span className="block font-tight text-[12px] font-medium tabular-nums tracking-tight text-ink-60">122</span>
+              <h3 className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]" style={{ fontSize: 'clamp(1.1rem,2.2vw,1.6rem)' }}>
+                Contact
+              </h3>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="mt-3 inline-block font-tight text-base font-medium tracking-[-0.01em] underline decoration-ink-15 underline-offset-4 transition-colors hover:decoration-[#FF2D78]"
+              >
+                {siteConfig.email}
+              </a>
+              <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-tight text-[11px] uppercase tracking-[0.1em] text-ink-60">
+                {siteConfig.socials.map((s) => (
+                  <li key={s.label}>
+                    <a href={s.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            <motion.p {...rise(0.24)} className="pt-2 text-right font-tight text-[10px] uppercase tracking-[0.14em] text-ink-40">
+              {siteConfig.name} — Vol. MMXXVI
+              <br />
+              <span className="text-ink-60">about-spread-RZ.indd</span>
+            </motion.p>
+          </div>
+        </div>
       </div>
     </section>
   )

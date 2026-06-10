@@ -40,6 +40,8 @@ export default {
         stencil: ['Anton', 'Impact', 'Haettenschweiler', 'sans-serif'],
         // Compact grotesque — condensed labels/body in the About zone.
         grotesk: ['Oswald', "'Arial Narrow'", 'Arial', 'sans-serif'],
+        // Tight bold neo-grotesque — the About "contents" list (Helvetica-style).
+        tight: ["'Helvetica Neue'", 'Helvetica', 'Arial', 'sans-serif'],
       },
       fontSize: {
         // micro-type for labels, indices, captions
