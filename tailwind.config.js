@@ -36,6 +36,10 @@ export default {
         display: ['bookmania', 'Georgia', "'Times New Roman'", 'serif'],
         // Body / captions — Rank (self-hosted @font-face). See index.css.
         body: ['Rank', 'Georgia', "'Times New Roman'", 'serif'],
+        // Compact display — ultra-condensed (About "graffiti wall" zone).
+        stencil: ['Anton', 'Impact', 'Haettenschweiler', 'sans-serif'],
+        // Compact grotesque — condensed labels/body in the About zone.
+        grotesk: ['Oswald', "'Arial Narrow'", 'Arial', 'sans-serif'],
       },
       fontSize: {
         // micro-type for labels, indices, captions

@@ -206,4 +206,14 @@ export const about: About = {
     { label: 'Built with', value: 'Vite · React · Tailwind' },
     { label: 'Year', value: '2026' },
   ],
+  gallery: [
+    { src: ph('btc-studio', 700, 880), caption: 'Studio, AM' },
+    { src: ph('btc-proc', 700, 760), caption: 'Process wall' },
+    { src: ph('btc-type', 700, 900), caption: 'Type tests' },
+    { src: ph('btc-riso', 700, 680), caption: 'Riso proofs' },
+    { src: ph('btc-desk', 700, 820), caption: 'Desk' },
+    { src: ph('btc-ink', 700, 720), caption: 'Ink swatches' },
+    { src: ph('btc-bind', 700, 900), caption: 'Bind test' },
+    { src: ph('btc-pin', 700, 700), caption: 'Pin-up' },
+  ],
 }
