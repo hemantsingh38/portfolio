@@ -206,14 +206,15 @@ export const about: About = {
     { label: 'Built with', value: 'Vite · React · Tailwind' },
     { label: 'Year', value: '2026' },
   ],
+  // Personal photos — one memory per year. Swap the seeds/sizes for your own.
   gallery: [
-    { src: ph('btc-studio', 700, 880), caption: 'Studio, AM' },
-    { src: ph('btc-proc', 700, 760), caption: 'Process wall' },
-    { src: ph('btc-type', 700, 900), caption: 'Type tests' },
-    { src: ph('btc-riso', 700, 680), caption: 'Riso proofs' },
-    { src: ph('btc-desk', 700, 820), caption: 'Desk' },
-    { src: ph('btc-ink', 700, 720), caption: 'Ink swatches' },
-    { src: ph('btc-bind', 700, 900), caption: 'Bind test' },
-    { src: ph('btc-pin', 700, 700), caption: 'Pin-up' },
+    { src: ph('mem-2014', 800, 1000), year: '2014', caption: 'first desk — a borrowed kitchen table' },
+    { src: ph('mem-2016', 900, 640), year: '2016', caption: 'the riso broke, then we fixed it' },
+    { src: ph('mem-2017', 760, 760), year: '2017', caption: 'three weeks on a single specimen' },
+    { src: ph('mem-2019', 820, 1020), year: '2019', caption: 'Mexico City — eight days, one roll left' },
+    { src: ph('mem-2020', 900, 620), year: '2020', caption: 'the studio moved into a spare room' },
+    { src: ph('mem-2022', 840, 680), year: '2022', caption: 'first real press check' },
+    { src: ph('mem-2023', 720, 900), year: '2023', caption: 'ink swatches at 2 a.m.' },
+    { src: ph('mem-2025', 860, 760), year: '2025', caption: 'the process wall, finally full' },
   ],
 }

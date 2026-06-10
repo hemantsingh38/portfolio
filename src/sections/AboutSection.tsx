@@ -3,42 +3,46 @@ import type { CSSProperties } from 'react'
 import { motion, useInView } from 'framer-motion'
 import LazyImage from '../components/LazyImage'
 import SprayCanvas from '../components/SprayCanvas'
-import { projects, about, siteConfig } from '../data/portfolio'
+import { about, siteConfig } from '../data/portfolio'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { useHasHover } from '../hooks/useHasHover'
 
 /**
- * About — a bright white magazine "contents" spread.
+ * About — a white editorial spread.
  *
- * Homage to the Reconnect (Kern FW21) contents page:
- *  • White paper, ink type, generous right-hand white space
- *  • A soft pink aerosol blob that builds up under the cursor (SprayCanvas)
- *    over a baked CSS base blob, so a magenta mass is always on the page
- *  • A tight-tracked bold caps contents list with small page numbers; one
- *    entry flagged in accent like the printed "ME / WE"
- *  • Inline thumbnails pinned beside entries
- *  • Scattered micro-graphics — a red pixel block, an orange chip, a maze
- *  • A barely-legible micro-type column down the far margin
+ *  • White paper, ink type, a soft pink aerosol blob that builds under the
+ *    cursor (SprayCanvas) over a baked CSS base blob.
+ *  • Body copy set to the LEFT in a single column — a serif, mixed-case
+ *    "About" heading (no shouty caps), intro, colophon, contact.
+ *  • Personal photos scattered at random across the right, each a memory
+ *    from a different year, tagged with a tiny micro-caption.
+ *  • Scattered micro-graphics — a red pixel block, an orange chip, a maze.
  */
 
 // Pink aerosol — one hue family so it reads as a single magenta cloud on white.
 const SPRAY_COLORS = ['#FF2D78', '#FF1F6F', '#FF4D90']
 
-// The six projects become the left "contents", with ascending page numbers.
-const PAGES = ['14', '23', '30', '40', '54', '72']
-// Which entries carry an inline thumbnail (mirrors the print mix).
-const THUMB_AT = new Set([0, 2, 4])
-// me-we is index 4 — flagged accent, echoing the printed red "ME / WE".
-const ACCENT_AT = 4
-
-// Baked pink mass — always present, so the page matches the reference even
-// before the cursor moves. The canvas then sprays live texture on top.
+// Baked pink mass, weighted toward the photo side so the left copy stays clean.
 const BLOB: CSSProperties = {
   background:
-    'radial-gradient(40% 48% at 33% 42%, rgba(255,45,120,0.40), rgba(255,45,120,0.16) 56%, transparent 72%),' +
-    'radial-gradient(20% 24% at 44% 52%, rgba(255,31,111,0.46), transparent 70%)',
+    'radial-gradient(42% 50% at 60% 44%, rgba(255,45,120,0.32), rgba(255,45,120,0.12) 56%, transparent 74%),' +
+    'radial-gradient(22% 26% at 52% 58%, rgba(255,31,111,0.38), transparent 70%)',
   filter: 'blur(3px)',
 }
+
+// Random-feeling scatter for the memory photos (lg+). Kept to the right side
+// so the left body column stays clear; the container holds a min-height.
+const SCATTER = [
+  { top: '0%', left: '49%', w: 200, rot: -3 },
+  { top: '22%', left: '73%', w: 150, rot: 4 },
+  { top: '4%', left: '84%', w: 114, rot: -6 },
+  { top: '42%', left: '54%', w: 178, rot: 2.5 },
+  { top: '55%', left: '80%', w: 138, rot: -4 },
+  { top: '72%', left: '57%', w: 196, rot: 3 },
+  { top: '68%', left: '85%', w: 112, rot: -2 },
+  { top: '31%', left: '48%', w: 120, rot: 5 },
+]
+const ASPECT = ['aspect-[4/5]', 'aspect-[3/2]', 'aspect-square', 'aspect-[4/5]', 'aspect-[3/2]', 'aspect-[5/4]', 'aspect-[4/5]', 'aspect-square']
 
 // Small abstract red pixel cluster (the "8-bit" micro-graphic).
 const PIXELS = [
@@ -51,14 +55,27 @@ const PIXELS = [
 
 type Mark = { c: string; top: string; left: string; rot: number; size: number; color: string; o?: number }
 const MARKS: Mark[] = [
-  { c: '✳', top: '6%', left: '2%', rot: -12, size: 22, color: '#1A4BE8', o: 0.8 },
-  { c: '→', top: '4%', left: '46%', rot: 0, size: 20, color: '#141414', o: 0.55 },
-  { c: '✦', top: '40%', left: '1%', rot: 14, size: 18, color: '#FF2D78' },
-  { c: '＋', top: '88%', left: '4%', rot: 0, size: 18, color: '#FF5A1F', o: 0.8 },
-  { c: '◆', top: '70%', left: '52%', rot: 0, size: 10, color: '#3DF03D' },
-  { c: '✕', top: '12%', left: '93%', rot: 8, size: 18, color: '#141414', o: 0.5 },
-  { c: '↗', top: '95%', left: '60%', rot: 0, size: 20, color: '#1A4BE8', o: 0.7 },
+  { c: '✳', top: '5%', left: '2%', rot: -12, size: 20, color: '#1A4BE8', o: 0.75 },
+  { c: '✦', top: '46%', left: '1%', rot: 14, size: 16, color: '#FF2D78' },
+  { c: '＋', top: '90%', left: '3%', rot: 0, size: 16, color: '#FF5A1F', o: 0.8 },
+  { c: '✕', top: '10%', left: '95%', rot: 8, size: 16, color: '#141414', o: 0.45 },
+  { c: '◆', top: '64%', left: '50%', rot: 0, size: 9, color: '#3DF03D' },
+  { c: '↗', top: '95%', left: '52%', rot: 0, size: 18, color: '#1A4BE8', o: 0.7 },
 ]
+
+function PhotoCaption({ n, year, caption }: { n: number; year?: string; caption?: string }) {
+  return (
+    <figcaption className="mt-1.5 max-w-[20ch] font-tight text-[10px] leading-[1.3] tracking-tight text-ink-60">
+      <span className="tabular-nums text-ink-40">{String(n).padStart(2, '0')}</span>
+      {year && (
+        <span className="ml-1.5 font-medium tabular-nums" style={{ color: '#FF2D78' }}>
+          {year}
+        </span>
+      )}
+      {caption && <span className="mt-0.5 block">{caption}</span>}
+    </figcaption>
+  )
+}
 
 export default function AboutSection() {
   const reduced = usePrefersReducedMotion()
@@ -86,7 +103,7 @@ export default function AboutSection() {
       <div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={BLOB} />
       <SprayCanvas colors={SPRAY_COLORS} className="absolute inset-0 z-0 h-full w-full" />
 
-      {/* Scattered micro-graphics, kept to the margins so they frame, not cover */}
+      {/* Scattered micro-graphics, kept to the margins/gutter */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
         {MARKS.map((m, i) => (
           <span
@@ -99,17 +116,17 @@ export default function AboutSection() {
         ))}
 
         {/* Red pixel block */}
-        <svg className="absolute hidden sm:block" style={{ top: '9%', left: '40%' }} width="36" height="36" viewBox="0 0 36 36">
+        <svg className="absolute hidden sm:block" style={{ top: '7%', left: '41%' }} width="36" height="36" viewBox="0 0 36 36">
           {PIXELS.flatMap((row, y) =>
             row.map((on, x) => (on ? <rect key={`${x}-${y}`} x={x * 7} y={y * 7} width="6.4" height="6.4" fill="#FF3B1E" /> : null)),
           )}
         </svg>
 
         {/* Orange→yellow chip */}
-        <div className="absolute hidden h-10 w-16 sm:block" style={{ top: '30%', left: '36%', background: 'linear-gradient(150deg,#FF5A1F,#FFC400)' }} />
+        <div className="absolute hidden h-9 w-14 sm:block" style={{ top: '35%', left: '43%', background: 'linear-gradient(150deg,#FF5A1F,#FFC400)' }} />
 
         {/* Tangled maze / scribble */}
-        <svg className="absolute hidden lg:block" style={{ top: '82%', left: '90%' }} width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="#141414" strokeWidth="2">
+        <svg className="absolute hidden lg:block" style={{ top: '84%', left: '90%' }} width="60" height="38" viewBox="0 0 64 40" fill="none" stroke="#141414" strokeWidth="2">
           <path d="M2 6h12v12H6v12h18V6h12v28h12V14H50" />
           <path d="M2 34h8M30 34h22" />
         </svg>
@@ -126,64 +143,33 @@ export default function AboutSection() {
           {...rise(0)}
           className="flex items-end justify-between border-b border-ink-15 pb-3 font-tight text-[10px] font-medium uppercase tracking-[0.16em] text-ink-60"
         >
-          <span>Contents — About</span>
+          <span>{siteConfig.name} — About</span>
           <span>{siteConfig.issue}</span>
         </motion.div>
 
-        <div className="mt-12 grid gap-x-12 gap-y-16 lg:grid-cols-2">
-          {/* ── Left: the contents list ─────────────────────────────── */}
-          <motion.ol {...rise(0.06)} className="space-y-9">
-            {projects.map((p, i) => {
-              const accent = i === ACCENT_AT
-              return (
-                <li key={p.id} className="max-w-[20ch]">
-                  <span
-                    className="block font-tight text-[12px] font-medium tabular-nums tracking-tight"
-                    style={accent ? { color: '#FF2D78' } : { color: 'rgba(20,20,20,0.55)' }}
-                  >
-                    {PAGES[i]}
-                  </span>
-                  <h3
-                    className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]"
-                    style={{ fontSize: 'clamp(1.4rem,3.2vw,2.5rem)', color: accent ? '#FF2D78' : undefined }}
-                  >
-                    {p.title}
-                  </h3>
-                  {THUMB_AT.has(i) && (
-                    <LazyImage
-                      src={p.coverImage}
-                      alt={p.title}
-                      className="mt-3 w-32 ring-1 ring-ink-15"
-                      imgClassName="aspect-[5/4] object-cover"
-                    />
-                  )}
-                </li>
-              )
-            })}
-          </motion.ol>
-
-          {/* ── Right: the About content, set as numbered blocks ────── */}
-          <div className="space-y-12 lg:pl-6">
-            <motion.div {...rise(0.12)}>
-              <span className="block font-tight text-[12px] font-medium tabular-nums tracking-tight text-ink-60">86</span>
-              <h3 className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]" style={{ fontSize: 'clamp(1.4rem,3.2vw,2.5rem)' }}>
-                About
-              </h3>
-              <p className="mt-4 max-w-[42ch] font-tight text-lg font-light leading-[1.25] tracking-[-0.01em] text-ink sm:text-xl">
-                {about.intro}
+        <div className="relative mt-12 lg:min-h-[880px]">
+          {/* ── Left: the body copy ─────────────────────────────────── */}
+          <motion.div {...rise(0.06)} className="relative z-10 lg:max-w-[30rem]">
+            <span className="font-tight text-[11px] uppercase tracking-[0.16em] text-ink-40">
+              The designer
+            </span>
+            <h2
+              className="mt-3 font-display leading-[0.95] tracking-[-0.01em]"
+              style={{ fontSize: 'clamp(2.2rem, 4.6vw, 3.4rem)' }}
+            >
+              About
+            </h2>
+            <p className="mt-5 max-w-[40ch] font-tight text-base font-light leading-[1.45] tracking-[-0.005em] text-ink sm:text-lg">
+              {about.intro}
+            </p>
+            {hasHover && !reduced && (
+              <p className="mt-4 font-tight text-[11px] tracking-tight text-ink-40">
+                <span style={{ color: '#FF2D78' }}>✲</span> move your cursor — the paint is still wet
               </p>
-              {hasHover && !reduced && (
-                <p className="mt-4 font-tight text-[11px] uppercase tracking-[0.12em] text-ink-40">
-                  <span style={{ color: '#FF2D78' }}>✲</span> move your cursor — the paint is still wet
-                </p>
-              )}
-            </motion.div>
+            )}
 
-            <motion.div {...rise(0.16)}>
-              <span className="block font-tight text-[12px] font-medium tabular-nums tracking-tight text-ink-60">105</span>
-              <h3 className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]" style={{ fontSize: 'clamp(1.1rem,2.2vw,1.6rem)' }}>
-                Colophon
-              </h3>
+            <div className="mt-10 border-t border-ink-15 pt-6">
+              <h3 className="font-tight text-base font-bold tracking-[-0.02em]">Colophon</h3>
               <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3">
                 {about.colophon.map((c) => (
                   <div key={c.label}>
@@ -192,13 +178,10 @@ export default function AboutSection() {
                   </div>
                 ))}
               </dl>
-            </motion.div>
+            </div>
 
-            <motion.div {...rise(0.2)}>
-              <span className="block font-tight text-[12px] font-medium tabular-nums tracking-tight text-ink-60">122</span>
-              <h3 className="mt-1 font-tight font-bold uppercase leading-[0.88] tracking-[-0.045em]" style={{ fontSize: 'clamp(1.1rem,2.2vw,1.6rem)' }}>
-                Contact
-              </h3>
+            <div className="mt-10 border-t border-ink-15 pt-6">
+              <h3 className="font-tight text-base font-bold tracking-[-0.02em]">Contact</h3>
               <a
                 href={`mailto:${siteConfig.email}`}
                 className="mt-3 inline-block font-tight text-base font-medium tracking-[-0.01em] underline decoration-ink-15 underline-offset-4 transition-colors hover:decoration-[#FF2D78]"
@@ -214,13 +197,48 @@ export default function AboutSection() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
 
-            <motion.p {...rise(0.24)} className="pt-2 text-right font-tight text-[10px] uppercase tracking-[0.14em] text-ink-40">
-              {siteConfig.name} — Vol. MMXXVI
-              <br />
-              <span className="text-ink-60">about-spread-RZ.indd</span>
-            </motion.p>
+            <p className="mt-10 font-tight text-[10px] uppercase tracking-[0.14em] text-ink-40">
+              {siteConfig.name} — Vol. MMXXVI · <span className="text-ink-60">about-spread-RZ.indd</span>
+            </p>
+          </motion.div>
+
+          {/* ── Right: scattered memory photos (lg+) ────────────────── */}
+          <motion.div {...rise(0.14)} className="pointer-events-none absolute inset-0 z-[2] hidden lg:block">
+            {about.gallery.map((g, i) => {
+              const s = SCATTER[i % SCATTER.length]
+              return (
+                <figure
+                  key={i}
+                  className="pointer-events-auto absolute"
+                  style={{ top: s.top, left: s.left, width: s.w, transform: `rotate(${s.rot}deg)` }}
+                >
+                  <LazyImage
+                    src={g.src}
+                    alt={g.caption ?? 'A memory'}
+                    className={`w-full ring-1 ring-ink-15 ${ASPECT[i % ASPECT.length]}`}
+                    imgClassName="object-cover"
+                  />
+                  <PhotoCaption n={i + 1} year={g.year} caption={g.caption} />
+                </figure>
+              )
+            })}
+          </motion.div>
+
+          {/* ── Right photos collapse into a loose grid on small screens ── */}
+          <div className="mt-14 grid grid-cols-2 gap-x-5 gap-y-9 sm:grid-cols-3 lg:hidden">
+            {about.gallery.map((g, i) => (
+              <figure key={i} style={{ transform: `rotate(${(i % 2 ? 1 : -1) * 1.8}deg)` }}>
+                <LazyImage
+                  src={g.src}
+                  alt={g.caption ?? 'A memory'}
+                  className={`w-full ring-1 ring-ink-15 ${ASPECT[i % ASPECT.length]}`}
+                  imgClassName="object-cover"
+                />
+                <PhotoCaption n={i + 1} year={g.year} caption={g.caption} />
+              </figure>
+            ))}
           </div>
         </div>
       </div>

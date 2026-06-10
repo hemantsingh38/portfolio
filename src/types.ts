@@ -56,6 +56,6 @@ export interface About {
   bio: string[]
   /** Colophon-style credits: label → value. */
   colophon: { label: string; value: string }[]
-  /** Small images for the About collage / contact sheet. */
-  gallery: { src: string; caption?: string }[]
+  /** Small images for the About collage — each a personal memory from a year. */
+  gallery: { src: string; caption?: string; year?: string }[]
 }
