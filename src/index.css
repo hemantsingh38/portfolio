@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ──────────────────────────────────────────────────────────────────
+   BODY TYPEFACE: Rank (self-hosted)
+   ──────────────────────────────────────────────────────────────────
+   TODO: add Rank font files
+   Drop the .woff2 files into /public/fonts/ using the names below.
+   Until the files exist the browser falls back to Georgia / Times.
+   (Add a .woff alongside each .woff2 if you need older-browser support.)
+   ────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Rank';
+  src: url('/fonts/Rank-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rank';
+  src: url('/fonts/Rank-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rank';
+  src: url('/fonts/Rank-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  /* "Book" — slightly heavier than Regular. Mapped to 450 as a custom step. */
+  font-family: 'Rank';
+  src: url('/fonts/Rank-Book.woff2') format('woff2');
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rank';
+  src: url('/fonts/Rank-BookItalic.woff2') format('woff2');
+  font-weight: 450;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rank';
+  src: url('/fonts/Rank-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rank';
+  src: url('/fonts/Rank-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rank';
+  src: url('/fonts/Rank-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  /* Editorial selection colour — a small blue punctuation moment */
+  ::selection {
+    background: #1a4be8;
+    color: #f7f5f0;
+  }
+
+  /* Visible, keyboard-friendly focus states everywhere */
+  :focus-visible {
+    outline: 2px solid #1a4be8;
+    outline-offset: 2px;
+  }
+
+  /* Honour reduced-motion globally as a safety net */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* ── Micro-typography: tiny uppercase tracked labels ───────────── */
+  .label {
+    @apply font-body text-micro uppercase tracking-label text-ink-60;
+  }
+  .label-ink {
+    @apply font-body text-micro uppercase tracking-label text-ink;
+  }
+
+  /* Numbered index marker, e.g. "01 / 14" */
+  .index-num {
+    @apply font-body text-micro-sm tabular-nums tracking-[0.1em];
+  }
+
+  /* Thin print-style hairline rule */
+  .hairline {
+    @apply border-0 border-t border-ink-15;
+  }
+
+  /* Editorial display headline — fluid, very large, tight */
+  .display {
+    @apply font-display font-medium leading-[0.92] tracking-[-0.01em];
+    font-size: clamp(2.75rem, 9vw, 9rem);
+  }
+  .display-xl {
+    @apply font-display font-medium leading-[0.88] tracking-[-0.02em];
+    font-size: clamp(3.5rem, 14vw, 11rem);
+  }
+
+  /* The page's breathing margins — like a printed spread */
+  .spread {
+    @apply mx-auto w-full max-w-spread px-5 sm:px-8 lg:px-14;
+  }
+}
+
+@layer utilities {
+  /* Vertical / rotated text for spine labels and section markers */
+  .vertical-rl {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  .rotate-180-text {
+    transform: rotate(180deg);
+  }
+}
