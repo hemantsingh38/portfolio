@@ -9,6 +9,9 @@ interface SprayCanvasProps {
   maxAlpha?: number
   /** Radius of the live airbrush cloud, in px. */
   radius?: number
+  /** Per-frame erosion of existing paint. 0 = paint persists and builds up
+   *  on repeated passes (like colouring on paper). */
+  fade?: number
   className?: string
 }
 
@@ -30,6 +33,7 @@ export default function SprayCanvas({
   colors = DEFAULT_COLORS,
   maxAlpha = 0.05,
   radius = 26,
+  fade = 0.014,
   className = '',
 }: SprayCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -159,12 +163,15 @@ export default function SprayCanvas({
       raf = window.requestAnimationFrame(loop)
       if (document.hidden) return
 
-      // Fade existing paint toward transparent (trailing aerosol).
-      ctx.globalCompositeOperation = 'destination-out'
-      ctx.globalAlpha = 1
-      ctx.fillStyle = 'rgba(0,0,0,0.014)'
-      ctx.fillRect(0, 0, width, height)
-      ctx.globalCompositeOperation = 'source-over'
+      // Fade existing paint toward transparent (trailing aerosol). With
+      // fade = 0 the paint persists and builds up like colouring on paper.
+      if (fade > 0) {
+        ctx.globalCompositeOperation = 'destination-out'
+        ctx.globalAlpha = 1
+        ctx.fillStyle = `rgba(0,0,0,${fade})`
+        ctx.fillRect(0, 0, width, height)
+        ctx.globalCompositeOperation = 'source-over'
+      }
 
       if (!active || targetX < 0) return
 
@@ -200,7 +207,7 @@ export default function SprayCanvas({
       window.removeEventListener('pointermove', onMove)
       ro.disconnect()
     }
-  }, [reduced, hasHover, colors, maxAlpha, radius])
+  }, [reduced, hasHover, colors, maxAlpha, radius, fade])
 
   return (
     <canvas

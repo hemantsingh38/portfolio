@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import type { CSSProperties } from 'react'
 import { motion, useInView } from 'framer-motion'
 import LazyImage from '../components/LazyImage'
 import SprayCanvas from '../components/SprayCanvas'
@@ -21,19 +22,27 @@ import { useHasHover } from '../hooks/useHasHover'
 // Pink aerosol — one hue family so it reads as a single magenta cloud on white.
 const SPRAY_COLORS = ['#FF2D78', '#FF1F6F', '#FF4D90']
 
-// Uniform photos scattered at random positions (lg+) — same size, no rotation.
-// Kept to the right side so the left body column stays clear.
-const PHOTO_W = 150
+// Soft baked pink mass under the live spray, weighted toward the photo side.
+const BLOB: CSSProperties = {
+  background:
+    'radial-gradient(42% 50% at 60% 44%, rgba(255,45,120,0.40), rgba(255,45,120,0.16) 56%, transparent 74%),' +
+    'radial-gradient(22% 26% at 52% 58%, rgba(255,31,111,0.46), transparent 70%)',
+  filter: 'blur(3px)',
+}
+
+// Uniform photos scattered at spaced positions (lg+) — same size, no rotation,
+// no overlap. Kept to the right side so the left body column stays clear.
+const PHOTO_W = 132
 const PHOTO_ASPECT = 'aspect-[4/5]'
 const SCATTER = [
-  { top: '0%', left: '49%' },
-  { top: '14%', left: '74%' },
-  { top: '26%', left: '55%' },
-  { top: '40%', left: '78%' },
-  { top: '44%', left: '49%' },
-  { top: '62%', left: '67%' },
-  { top: '70%', left: '83%' },
-  { top: '76%', left: '50%' },
+  { top: '0%', left: '48%' },
+  { top: '2%', left: '64%' },
+  { top: '0%', left: '80%' },
+  { top: '30%', left: '47%' },
+  { top: '32%', left: '63%' },
+  { top: '30%', left: '80%' },
+  { top: '60%', left: '55%' },
+  { top: '62%', left: '71%' },
 ]
 
 // Small abstract red pixel cluster (the "8-bit" micro-graphic).
@@ -91,8 +100,10 @@ export default function AboutSection() {
       aria-label="About"
       className="relative overflow-hidden bg-white text-ink"
     >
-      {/* Live pink aerosol that follows the cursor — no static blob */}
-      <SprayCanvas colors={SPRAY_COLORS} maxAlpha={0.13} radius={34} className="absolute inset-0 z-0 h-full w-full" />
+      {/* Soft gradient base + live aerosol that follows the cursor and builds
+          up on repeated passes (fade={0}) — like colouring on paper. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={BLOB} />
+      <SprayCanvas colors={SPRAY_COLORS} maxAlpha={0.16} radius={34} fade={0} className="absolute inset-0 z-0 h-full w-full" />
 
       {/* Scattered micro-graphics, kept to the margins/gutter */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
@@ -138,7 +149,7 @@ export default function AboutSection() {
           <span>{siteConfig.issue}</span>
         </motion.div>
 
-        <div className="relative mt-12 lg:min-h-[880px]">
+        <div className="relative mt-12 lg:min-h-[940px]">
           {/* ── Left: the body copy ─────────────────────────────────── */}
           <motion.div {...rise(0.06)} className="relative z-10 lg:max-w-[30rem]">
             <span className="font-tight text-[11px] uppercase tracking-[0.16em] text-ink-40">
