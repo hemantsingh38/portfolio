@@ -5,23 +5,27 @@ interface CursorPreviewProps {
   /** Image src to show, or null when nothing is hovered. */
   src: string | null
   alt: string
+  /** Two-digit project index, e.g. "01". */
+  index?: string
+  /** Category line shown under the image. */
+  category?: string
+  /** Accent colour for the top hairline bar. */
+  accent?: string
 }
 
 /**
- * A small image that follows the cursor with a slight easing lag.
+ * An editorial preview card that trails the cursor (to its lower-right).
  *
- * Performance notes:
- *  • We do NOT set React state on every mousemove. The pointer position is
- *    held in refs and the element is moved via a requestAnimationFrame loop
- *    that lerps the rendered position toward the target — smooth + cheap.
- *  • Only `src`/visibility changes go through React state (here, via props).
+ * The pointer position lives in refs and the card is moved via a single
+ * requestAnimationFrame loop that lerps toward the target — smooth + cheap,
+ * no React state per mousemove. On appear it wipes open with a clip-path so it
+ * reads like a printed plate being revealed rather than a floating thumbnail.
  *
- * Rendered only when a hover-capable pointer exists and reduced-motion is
- * off — the parent (Work page) is responsible for that gate.
+ * Rendered only when a hover-capable pointer exists and reduced-motion is off
+ * — the parent (Work section) gates that.
  */
-export default function CursorPreview({ src, alt }: CursorPreviewProps) {
+export default function CursorPreview({ src, alt, index, category, accent = '#141414' }: CursorPreviewProps) {
   const elRef = useRef<HTMLDivElement | null>(null)
-  // target = where the cursor is; current = where the element is drawn
   const target = useRef({ x: -9999, y: -9999 })
   const current = useRef({ x: -9999, y: -9999 })
   const raf = useRef<number | null>(null)
@@ -33,13 +37,13 @@ export default function CursorPreview({ src, alt }: CursorPreviewProps) {
     }
     window.addEventListener('pointermove', onMove, { passive: true })
 
-    const LERP = 0.14 // lower = more lag/float
+    const LERP = 0.16
     const tick = () => {
       current.current.x += (target.current.x - current.current.x) * LERP
       current.current.y += (target.current.y - current.current.y) * LERP
       const el = elRef.current
       if (el) {
-        el.style.transform = `translate3d(${current.current.x}px, ${current.current.y}px, 0) translate(-50%, -50%)`
+        el.style.transform = `translate3d(${current.current.x}px, ${current.current.y}px, 0)`
       }
       raf.current = requestAnimationFrame(tick)
     }
@@ -58,20 +62,30 @@ export default function CursorPreview({ src, alt }: CursorPreviewProps) {
       className="pointer-events-none fixed left-0 top-0 z-30 hidden md:block"
       style={{ willChange: 'transform' }}
     >
-      <AnimatePresence>
-        {src && (
-          <motion.div
-            key={src}
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="h-[260px] w-[200px] overflow-hidden bg-ink-08 shadow-[0_18px_50px_-20px_rgba(20,20,20,0.45)]"
-          >
-            <img src={src} alt={alt} className="h-full w-full object-cover" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Offset the card to the lower-right of the cursor */}
+      <div style={{ transform: 'translate(28px, -52%)' }}>
+        <AnimatePresence mode="wait">
+          {src && (
+            <motion.figure
+              key={src}
+              initial={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
+              animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
+              exit={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
+              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+              className="w-[228px]"
+            >
+              <span className="block h-[3px] w-full" style={{ backgroundColor: accent }} />
+              <span className="block aspect-[4/5] w-full overflow-hidden bg-ink-08 shadow-[0_14px_44px_-26px_rgba(20,20,20,0.55)]">
+                <img src={src} alt={alt} className="h-full w-full object-cover" />
+              </span>
+              <figcaption className="mt-2 flex items-baseline justify-between">
+                <span className="font-display text-lg leading-none tabular-nums text-ink">{index}</span>
+                <span className="label text-ink-60">{category}</span>
+              </figcaption>
+            </motion.figure>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }

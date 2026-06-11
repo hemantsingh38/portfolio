@@ -155,3 +155,19 @@
     transform: rotate(180deg);
   }
 }
+
+/* ── About: slowly drifting gradient field (cursor-reactive) ──────────
+   Two layers crossfade-drift to keep the pink field alive; the global
+   reduced-motion rule above neutralises these into a static field. */
+@keyframes about-drift {
+  0%   { transform: translate3d(-4%, -3%, 0) scale(1.08) rotate(0deg); }
+  50%  { transform: translate3d(4%, 3%, 0) scale(1.18) rotate(10deg); }
+  100% { transform: translate3d(-4%, -3%, 0) scale(1.08) rotate(0deg); }
+}
+@keyframes about-drift-2 {
+  0%   { transform: translate3d(3%, 2%, 0) scale(1.12) rotate(0deg); }
+  50%  { transform: translate3d(-4%, -3%, 0) scale(1.0) rotate(-9deg); }
+  100% { transform: translate3d(3%, 2%, 0) scale(1.12) rotate(0deg); }
+}
+.about-drift   { animation: about-drift 24s ease-in-out infinite; will-change: transform; }
+.about-drift-2 { animation: about-drift-2 19s ease-in-out infinite; will-change: transform; }

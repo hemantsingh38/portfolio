@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { motion, useInView } from 'framer-motion'
 import LazyImage from '../components/LazyImage'
-import SprayCanvas from '../components/SprayCanvas'
 import { about, siteConfig } from '../data/portfolio'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { useHasHover } from '../hooks/useHasHover'
@@ -19,16 +18,24 @@ import { useHasHover } from '../hooks/useHasHover'
  *  • Scattered micro-graphics — a red pixel block, an orange chip, a maze.
  */
 
-// Light pink aerosol — soft tints that, multiplied over white, settle into the
-// same pink as the baked gradient (so the painted trail merges, not glows).
-const SPRAY_COLORS = ['#FF7DB0', '#FF8FBC', '#FF6AA6']
-
-// Soft baked pink mass under the live spray, weighted toward the photo side.
-const BLOB: CSSProperties = {
+// Animated, cursor-reactive gradient field (replaces the spray). Two soft pink
+// meshes drift on a loop; a third mass tracks the pointer via --mx/--my.
+const AMBIENT_A: CSSProperties = {
   background:
-    'radial-gradient(42% 50% at 60% 44%, rgba(255,45,120,0.40), rgba(255,45,120,0.16) 56%, transparent 74%),' +
-    'radial-gradient(22% 26% at 52% 58%, rgba(255,31,111,0.46), transparent 70%)',
-  filter: 'blur(3px)',
+    'radial-gradient(38% 42% at 60% 40%, rgba(255,45,120,0.34), transparent 64%),' +
+    'radial-gradient(26% 30% at 38% 62%, rgba(255,90,150,0.26), transparent 66%)',
+  filter: 'blur(10px)',
+}
+const AMBIENT_B: CSSProperties = {
+  background:
+    'radial-gradient(30% 34% at 74% 66%, rgba(255,120,170,0.24), transparent 68%),' +
+    'radial-gradient(22% 26% at 50% 30%, rgba(255,45,120,0.20), transparent 70%)',
+  filter: 'blur(12px)',
+}
+const CURSOR_FIELD: CSSProperties = {
+  background:
+    'radial-gradient(34% 42% at var(--mx,50%) var(--my,42%), rgba(255,45,120,0.42), rgba(255,45,120,0.12) 50%, transparent 70%)',
+  filter: 'blur(6px)',
 }
 
 // Uniform photos scattered at spaced positions (lg+) — same size, no rotation,
@@ -83,35 +90,37 @@ export default function AboutSection() {
   const reduced = usePrefersReducedMotion()
   const hasHover = useHasHover()
   const ref = useRef<HTMLElement>(null)
-  const glossRef = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-10% 0px' })
 
-  // Glossy laminate highlight tracks the pointer (rAF-throttled). Stays at its
-  // static default when there's no hover pointer or reduced-motion is set.
+  // Cursor drives a lerped focal point (--mx/--my on the section root) shared by
+  // the gradient field and the glossy highlight, so the pink mass glides toward
+  // the pointer. Static defaults when there's no hover pointer / reduced-motion.
   useEffect(() => {
     if (!hasHover || reduced) return
-    const sectionEl = ref.current
-    const gloss = glossRef.current
-    if (!sectionEl || !gloss) return
+    const el = ref.current
+    if (!el) return
     let raf = 0
-    let nx = 50
-    let ny = 28
+    let tx = 50
+    let ty = 42
+    let cx = 50
+    let cy = 42
     const onMove = (e: PointerEvent) => {
-      const rect = sectionEl.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
-      if (x < -15 || x > 115 || y < -15 || y > 115) return
-      nx = x
-      ny = y
-      if (!raf) {
-        raf = window.requestAnimationFrame(() => {
-          raf = 0
-          gloss.style.setProperty('--mx', `${nx}%`)
-          gloss.style.setProperty('--my', `${ny}%`)
-        })
-      }
+      const r = el.getBoundingClientRect()
+      const x = ((e.clientX - r.left) / r.width) * 100
+      const y = ((e.clientY - r.top) / r.height) * 100
+      if (x < -25 || x > 125 || y < -25 || y > 125) return
+      tx = x
+      ty = y
+    }
+    const tick = () => {
+      cx += (tx - cx) * 0.12
+      cy += (ty - cy) * 0.12
+      el.style.setProperty('--mx', `${cx.toFixed(2)}%`)
+      el.style.setProperty('--my', `${cy.toFixed(2)}%`)
+      raf = window.requestAnimationFrame(tick)
     }
     window.addEventListener('pointermove', onMove, { passive: true })
+    raf = window.requestAnimationFrame(tick)
     return () => {
       window.removeEventListener('pointermove', onMove)
       if (raf) window.cancelAnimationFrame(raf)
@@ -134,17 +143,13 @@ export default function AboutSection() {
       aria-label="About"
       className="relative overflow-hidden bg-white text-ink"
     >
-      {/* Soft gradient base + live aerosol that follows the cursor and builds
-          up on repeated passes (fade={0}) — like colouring on paper. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={BLOB} />
-      <SprayCanvas
-        colors={SPRAY_COLORS}
-        smooth
-        maxAlpha={0.18}
-        radius={40}
-        fade={0}
-        className="absolute inset-0 z-0 h-full w-full mix-blend-multiply"
-      />
+      {/* Animated, cursor-reactive gradient field (no discrete spots):
+          two drifting pink meshes + a mass that glides toward the pointer. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div className="about-drift absolute -inset-[18%]" style={AMBIENT_A} />
+        <div className="about-drift-2 absolute -inset-[18%]" style={AMBIENT_B} />
+        <div className="absolute inset-0" style={CURSOR_FIELD} />
+      </div>
 
       {/* Scattered micro-graphics, kept to the margins/gutter */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
@@ -298,11 +303,10 @@ export default function AboutSection() {
           }}
         />
         <div
-          ref={glossRef}
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(circle at var(--mx,50%) var(--my,28%), rgba(255,255,255,0.22), rgba(255,255,255,0) 40%)',
+              'radial-gradient(circle at var(--mx,50%) var(--my,42%), rgba(255,255,255,0.20), rgba(255,255,255,0) 40%)',
             mixBlendMode: 'screen',
           }}
         />

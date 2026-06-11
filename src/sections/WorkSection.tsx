@@ -37,8 +37,7 @@ function ProjectExpand({ project, onClose }: { project: Project; onClose: () => 
     transition: { duration: reduced ? 0.1 : 0.6, delay: reduced ? 0 : delay, ease },
   })
 
-  const full  = project.images.filter(i => i.layout === 'full')
-  const grid  = project.images.filter(i => i.layout === 'grid')
+  const full = project.images.filter(i => i.layout === 'full')
   const offset = project.images.filter(i => i.layout === 'offset')
 
   return (
@@ -141,42 +140,6 @@ function ProjectExpand({ project, onClose }: { project: Project; onClose: () => 
           )}
         </motion.div>
 
-        {/* Contact-sheet grid images */}
-        {grid.length > 0 && (
-          <motion.div
-            {...rise(0.22)}
-            className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3"
-          >
-            {grid.map((img, i) => (
-              <div key={i}>
-                <LazyImage
-                  src={img.src}
-                  alt={img.alt}
-                  className="aspect-[4/3] w-full"
-                  imgClassName="object-cover"
-                />
-                {img.caption && (
-                  <p className="label mt-1 opacity-60">{img.caption}</p>
-                )}
-              </div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Second full-bleed image (if present) */}
-        {full[1] && (
-          <motion.div {...rise(0.26)} className="mt-8">
-            <LazyImage
-              src={full[1].src}
-              alt={full[1].alt}
-              className="aspect-[16/9] w-full"
-              imgClassName="object-cover"
-            />
-            {full[1].caption && (
-              <p className="label mt-2 opacity-60">{full[1].caption}</p>
-            )}
-          </motion.div>
-        )}
       </div>
     </motion.div>
   )
@@ -233,6 +196,9 @@ export default function WorkSection() {
         <CursorPreview
           src={hoveredProject ? hoveredProject.coverImage : null}
           alt={hoveredProject ? `${hoveredProject.title} preview` : ''}
+          index={hoveredProject?.index}
+          category={hoveredProject?.category}
+          accent={hoveredProject ? ZONE_BG[hoveredProject.accentColor] : '#141414'}
         />
       )}
 
