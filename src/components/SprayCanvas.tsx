@@ -12,10 +12,22 @@ interface SprayCanvasProps {
   /** Per-frame erosion of existing paint. 0 = paint persists and builds up
    *  on repeated passes (like colouring on paper). */
   fade?: number
+  /** Smooth mode: stamp soft radial discs instead of grainy specks, and skip
+   *  drips — a low-noise cloud that merges into a gradient. */
+  smooth?: boolean
   className?: string
 }
 
 const DEFAULT_COLORS = ['#3DF03D', '#FF2D78', '#FF5A1F', '#1A4BE8']
+
+// #rrggbb → rgba() string (smooth-mode gradient stops need rgba).
+function hexToRgba(hex: string, a: number): string {
+  const h = hex.replace('#', '')
+  const r = parseInt(h.slice(0, 2), 16)
+  const g = parseInt(h.slice(2, 4), 16)
+  const b = parseInt(h.slice(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${a})`
+}
 
 /**
  * A "wet wall" of spray paint that follows the pointer.
@@ -34,6 +46,7 @@ export default function SprayCanvas({
   maxAlpha = 0.05,
   radius = 26,
   fade = 0.014,
+  smooth = false,
   className = '',
 }: SprayCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -61,7 +74,8 @@ export default function SprayCanvas({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
 
-    // One airbrush burst: a disc of low-alpha specks around (x, y).
+    // One airbrush burst. Smooth mode stamps a single soft radial disc (no
+    // grain); otherwise a disc of low-alpha specks around (x, y).
     const sprayBurst = (
       x: number,
       y: number,
@@ -70,6 +84,18 @@ export default function SprayCanvas({
       count: number,
       maxAlpha: number,
     ) => {
+      if (smooth) {
+        const g = ctx.createRadialGradient(x, y, 0, x, y, radius)
+        g.addColorStop(0, hexToRgba(color, maxAlpha))
+        g.addColorStop(0.55, hexToRgba(color, maxAlpha * 0.45))
+        g.addColorStop(1, hexToRgba(color, 0))
+        ctx.globalAlpha = 1
+        ctx.fillStyle = g
+        ctx.beginPath()
+        ctx.arc(x, y, radius, 0, Math.PI * 2)
+        ctx.fill()
+        return
+      }
       ctx.fillStyle = color
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2
@@ -187,8 +213,8 @@ export default function SprayCanvas({
       const color = colors[Math.floor(colorIndex)]
       sprayBurst(curX, curY, color, radius, Math.floor(64 * intensity), maxAlpha)
 
-      // Occasional running drip for the wet-paint feel.
-      if (Math.random() < 0.04 * intensity) {
+      // Occasional running drip for the wet-paint feel (skipped when smooth).
+      if (!smooth && Math.random() < 0.04 * intensity) {
         ctx.globalAlpha = 0.06
         ctx.strokeStyle = color
         ctx.lineWidth = 1 + Math.random() * 1.4
@@ -207,7 +233,7 @@ export default function SprayCanvas({
       window.removeEventListener('pointermove', onMove)
       ro.disconnect()
     }
-  }, [reduced, hasHover, colors, maxAlpha, radius, fade])
+  }, [reduced, hasHover, colors, maxAlpha, radius, fade, smooth])
 
   return (
     <canvas

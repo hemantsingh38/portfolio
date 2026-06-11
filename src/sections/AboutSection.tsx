@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { motion, useInView } from 'framer-motion'
 import LazyImage from '../components/LazyImage'
@@ -19,8 +19,9 @@ import { useHasHover } from '../hooks/useHasHover'
  *  • Scattered micro-graphics — a red pixel block, an orange chip, a maze.
  */
 
-// Pink aerosol — one hue family so it reads as a single magenta cloud on white.
-const SPRAY_COLORS = ['#FF2D78', '#FF1F6F', '#FF4D90']
+// Light pink aerosol — soft tints that, multiplied over white, settle into the
+// same pink as the baked gradient (so the painted trail merges, not glows).
+const SPRAY_COLORS = ['#FF7DB0', '#FF8FBC', '#FF6AA6']
 
 // Soft baked pink mass under the live spray, weighted toward the photo side.
 const BLOB: CSSProperties = {
@@ -82,7 +83,40 @@ export default function AboutSection() {
   const reduced = usePrefersReducedMotion()
   const hasHover = useHasHover()
   const ref = useRef<HTMLElement>(null)
+  const glossRef = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-10% 0px' })
+
+  // Glossy laminate highlight tracks the pointer (rAF-throttled). Stays at its
+  // static default when there's no hover pointer or reduced-motion is set.
+  useEffect(() => {
+    if (!hasHover || reduced) return
+    const sectionEl = ref.current
+    const gloss = glossRef.current
+    if (!sectionEl || !gloss) return
+    let raf = 0
+    let nx = 50
+    let ny = 28
+    const onMove = (e: PointerEvent) => {
+      const rect = sectionEl.getBoundingClientRect()
+      const x = ((e.clientX - rect.left) / rect.width) * 100
+      const y = ((e.clientY - rect.top) / rect.height) * 100
+      if (x < -15 || x > 115 || y < -15 || y > 115) return
+      nx = x
+      ny = y
+      if (!raf) {
+        raf = window.requestAnimationFrame(() => {
+          raf = 0
+          gloss.style.setProperty('--mx', `${nx}%`)
+          gloss.style.setProperty('--my', `${ny}%`)
+        })
+      }
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      if (raf) window.cancelAnimationFrame(raf)
+    }
+  }, [hasHover, reduced])
 
   const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
   const rise = (delay: number) => ({
@@ -103,7 +137,14 @@ export default function AboutSection() {
       {/* Soft gradient base + live aerosol that follows the cursor and builds
           up on repeated passes (fade={0}) — like colouring on paper. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-0" style={BLOB} />
-      <SprayCanvas colors={SPRAY_COLORS} maxAlpha={0.16} radius={34} fade={0} className="absolute inset-0 z-0 h-full w-full" />
+      <SprayCanvas
+        colors={SPRAY_COLORS}
+        smooth
+        maxAlpha={0.18}
+        radius={40}
+        fade={0}
+        className="absolute inset-0 z-0 h-full w-full mix-blend-multiply"
+      />
 
       {/* Scattered micro-graphics, kept to the margins/gutter */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
@@ -243,6 +284,28 @@ export default function AboutSection() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Glossy plastic laminate — a static diagonal streak + a soft highlight
+          that tracks the cursor. Subtle, above content, never blocks input. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-20">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.18) 47%, rgba(255,255,255,0.04) 53%, transparent 64%)',
+            mixBlendMode: 'soft-light',
+          }}
+        />
+        <div
+          ref={glossRef}
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(circle at var(--mx,50%) var(--my,28%), rgba(255,255,255,0.22), rgba(255,255,255,0) 40%)',
+            mixBlendMode: 'screen',
+          }}
+        />
       </div>
     </section>
   )
