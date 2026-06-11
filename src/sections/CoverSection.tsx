@@ -42,7 +42,13 @@ export default function CoverSection() {
       className="relative bg-paper pb-0 pt-10 sm:pt-16"
       aria-label="Cover"
     >
-      <div className="spread">
+      <div className="spread relative">
+        {/* Bauhaus primaries — red circle, blue triangle, yellow square */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <span className="absolute right-[5%] top-[16%] h-20 w-20 rounded-full bg-red sm:h-28 sm:w-28" />
+          <span className="absolute right-[24%] top-[9%] h-0 w-0 border-x-[28px] border-b-[48px] border-x-transparent border-b-blue sm:border-x-[40px] sm:border-b-[68px]" />
+          <span className="absolute bottom-[14%] left-[1%] h-14 w-14 bg-yellow sm:h-20 sm:w-20" />
+        </div>
         {/* Top masthead rail */}
         <motion.div
           {...rise(0)}
@@ -59,10 +65,7 @@ export default function CoverSection() {
             {...rise(0.06)}
             className="display-xl text-ink leading-[0.88]"
           >
-            Blue
-            <span className="text-blue">tiger</span>
-            <br />
-            cub
+            Hem<span className="text-blue">a</span>nt
           </motion.h1>
 
           {/* Vertical spine label */}
@@ -73,6 +76,11 @@ export default function CoverSection() {
             An editorial design portfolio
           </motion.span>
         </div>
+
+        {/* Shoutout credit */}
+        <motion.span {...rise(0.1)} className="label mt-5 block text-ink-40">
+          Homage 01 · Bauhaus, 1919 — Gropius / Bayer
+        </motion.span>
 
         {/* Sub-deck + oversized folio */}
         <motion.div

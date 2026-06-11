@@ -39,6 +39,8 @@ export interface Project {
   images: ProjectImage[]
   /** Background color zone used when this project is expanded inline. */
   accentColor: AccentColor
+  /** Optional external case-study link (Behance, Notion, live site). */
+  externalUrl?: string
 }
 
 export interface SiteConfig {

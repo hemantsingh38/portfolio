@@ -28,10 +28,15 @@ export default function ContactSection() {
     <section
       id="contact"
       ref={ref}
-      className="bg-blue text-paper"
+      className="relative overflow-hidden bg-ink text-paper"
       aria-label="Contact"
     >
-      <div className="spread py-20 sm:py-32">
+      {/* Constructivist red wedge — after El Lissitzky's "Beat the Whites with the Red Wedge" */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute right-0 top-0 h-full w-[64%]" style={{ background: '#E4002B', clipPath: 'polygon(100% 0, 100% 100%, 0 46%)' }} />
+        <div className="absolute left-[-6%] top-[66%] h-[3px] w-[56%] -rotate-[18deg]" style={{ background: 'rgba(247,245,240,0.7)' }} />
+      </div>
+      <div className="spread relative z-10 py-20 sm:py-32">
         {/* Section marker */}
         <motion.div
           {...rise(0)}
@@ -44,7 +49,11 @@ export default function ContactSection() {
         {/* Oversized folio */}
         <motion.div {...rise(0.04)} className="mt-8 flex items-end gap-6">
           <span aria-hidden className="folio text-paper">04</span>
-          <span className="label pb-2 text-paper-60">Closing · Contact</span>
+          <span className="label pb-2 leading-tight text-paper-60">
+            Connect
+            <br />
+            Homage 04 · Constructivism, 1919 — El Lissitzky
+          </span>
         </motion.div>
 
         {/* Headline */}

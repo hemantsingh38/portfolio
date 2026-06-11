@@ -163,6 +163,16 @@ export default function AboutSection() {
           </span>
         ))}
 
+        {/* Memphis motifs — squiggle, dots, half-circle, triangle */}
+        <svg className="absolute hidden lg:block" style={{ top: '5%', left: '24%' }} width="124" height="34" viewBox="0 0 124 34" fill="none" stroke="#15C7C7" strokeWidth="5" strokeLinecap="round">
+          <path d="M3 17 q9 -15 18 0 t18 0 t18 0 t18 0 t18 0" />
+        </svg>
+        <span aria-hidden className="absolute hidden h-6 w-12 rounded-t-full bg-yellow sm:block" style={{ top: '58%', left: '34%' }} />
+        <span aria-hidden className="absolute hidden sm:block" style={{ top: '26%', left: '30%', width: 0, height: 0, borderLeft: '15px solid transparent', borderRight: '15px solid transparent', borderBottom: '25px solid #15C7C7' }} />
+        {[['13%', '33%', '#1A4BE8'], ['68%', '30%', '#FF2D78'], ['46%', '28%', '#FFD400']].map(([t, l, c], i) => (
+          <span key={`m-dot-${i}`} aria-hidden className="absolute hidden h-2.5 w-2.5 rounded-full sm:block" style={{ top: t, left: l, background: c }} />
+        ))}
+
         {/* Red pixel block */}
         <svg className="absolute hidden sm:block" style={{ top: '7%', left: '41%' }} width="36" height="36" viewBox="0 0 36 36">
           {PIXELS.flatMap((row, y) =>
@@ -198,7 +208,11 @@ export default function AboutSection() {
         {/* Oversized folio */}
         <motion.div {...rise(0.04)} className="mt-6 flex items-end gap-5">
           <span aria-hidden className="folio" style={{ color: '#FF2D78' }}>03</span>
-          <span className="pb-2 font-tight text-[11px] uppercase tracking-[0.16em] text-ink-40">The studio</span>
+          <span className="pb-2 font-tight text-[11px] uppercase leading-tight tracking-[0.16em] text-ink-40">
+            The studio
+            <br />
+            Homage 03 · Memphis Milano, 1981 — Sottsass
+          </span>
         </motion.div>
 
         <div className="relative mt-12 lg:min-h-[940px]">

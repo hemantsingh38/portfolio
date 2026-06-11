@@ -118,12 +118,23 @@ function ProjectExpand({ project, onClose }: { project: Project; onClose: () => 
                 {para}
               </p>
             ))}
-            <Link
-              to={`/work/${project.id}`}
-              className="label mt-4 inline-flex items-center gap-2 opacity-80 transition-opacity hover:opacity-100"
-            >
-              Full case study →
-            </Link>
+            {project.externalUrl ? (
+              <a
+                href={project.externalUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="label mt-4 inline-flex items-center gap-2 opacity-80 transition-opacity hover:opacity-100"
+              >
+                View case study ↗
+              </a>
+            ) : (
+              <Link
+                to={`/work/${project.id}`}
+                className="label mt-4 inline-flex items-center gap-2 opacity-80 transition-opacity hover:opacity-100"
+              >
+                Full case study →
+              </Link>
+            )}
           </div>
 
           {/* Offset image (right column) */}
@@ -225,9 +236,12 @@ export default function WorkSection() {
             </span>
           </div>
           <div className="mt-6 flex flex-wrap items-end gap-x-6 gap-y-1">
-            <span aria-hidden className="folio" style={{ color: zoneText }}>02</span>
+            <span aria-hidden className="folio" style={{ color: expandedProject ? zoneText : '#E4002B' }}>02</span>
             <h2 className="display">Selected Work</h2>
           </div>
+          <span className="label mt-4 block" style={{ color: zoneText, opacity: 0.55 }}>
+            Homage 02 · International Typographic Style — Müller-Brockmann
+          </span>
         </motion.header>
 
         {/* Column headings */}

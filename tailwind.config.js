@@ -17,6 +17,8 @@ export default {
         magenta: '#C8186C',
         green:   '#3DF03D',   // fluoro green
         orange:  '#FF5A1F',   // safety orange
+        red:     '#E4002B',   // constructivist red
+        yellow:  '#FFD400',   // bauhaus yellow
         // Pale zone tints — for soft pastel fields
         'blue-pale':   '#D6E0FF',
         'pink-pale':   '#FFE0EC',

@@ -6,9 +6,9 @@ const SECTION_IDS = ['cover', 'work', 'about', 'contact']
 
 const NAV = [
   { id: 'cover', label: 'Cover' },
-  { id: 'work',  label: 'Index' },
+  { id: 'work',  label: 'Work' },
   { id: 'about', label: 'About' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'contact', label: 'Connect' },
 ]
 
 /**
@@ -36,7 +36,7 @@ export default function Header() {
             to="/"
             className="font-display text-lg font-medium leading-none tracking-[-0.01em] text-ink transition-colors hover:text-blue"
           >
-            Bluetigercub
+            {siteConfig.name}
           </Link>
 
           <nav aria-label="Primary">

@@ -1,220 +1,150 @@
 // ══════════════════════════════════════════════════════════════════
 //  ✏️  EDIT YOUR PORTFOLIO HERE
 //  ──────────────────────────────────────────────────────────────────
-//  This single file holds ALL site content. Swap the dummy copy and
-//  the picsum.photos placeholders for your real text and images.
-//
-//  • Images: replace the picsum.photos URLs with paths to your own
-//    files (e.g. "/work/project-01/cover.jpg" placed in /public/work/).
-//  • Keep the `index` values two digits ("01", "02", …) — they drive
-//    the table-of-contents numbering.
-//  • `layout` on each image controls placement on the detail spread:
-//      'full'   → full-bleed
-//      'offset' → smaller, offset thumbnail that breaks the grid
-//      'grid'   → contact-sheet / index cell (placed in a small grid)
+//  Content for Hemant — UX & product designer. Project case-study copy
+//  is synthesised from the public one-liners on findingyouhemant.framer.website;
+//  swap years / descriptions / images for the real specifics any time.
+//  Images use picsum placeholders — replace with real exports in /public.
 // ══════════════════════════════════════════════════════════════════
 
 import type { About, AccentColor, Project, SiteConfig } from '../types'
 
 // Helper: deterministic placeholder image of a given size.
-// picsum's /seed/ endpoint keeps an image stable across reloads.
-// TODO: replace these with your real images.
 const ph = (seed: string, w: number, h: number) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`
 
 export const siteConfig: SiteConfig = {
-  name: 'Bluetigercub',
-  tagline: 'Editorial & brand design, set like print.',
-  issue: 'Issue 01 — Vol. MMXXVI',
-  email: 'hello@bluetigercub.studio',
+  name: 'Hemant',
+  tagline: 'UX & product designer — bringing change, fun, and newness to products.',
+  issue: 'Early Winter — Vol. MMXXVI',
+  email: 'hgusain307@gmail.com',
   socials: [
-    { label: 'Instagram', href: 'https://instagram.com/' },
-    { label: 'Are.na', href: 'https://are.na/' },
-    { label: 'LinkedIn', href: 'https://linkedin.com/' },
-    { label: 'Read.cv', href: 'https://read.cv/' },
+    { label: 'Behance', href: 'https://www.behance.net/gallery/220593565/Uphold-(mentorship-from-industry-experts)' },
+    { label: 'Notion', href: 'https://www.notion.so/VEJEEZ-One-stop-shop-for-vegan-products-c287f50867854088b6fa4211cc7be3aa' },
+    { label: 'Email', href: 'mailto:hgusain307@gmail.com' },
   ],
 }
 
 export const projects: Project[] = [
   {
-    id: 'reconnect',
+    id: 'uphold',
     index: '01',
-    title: 'Reconnect',
-    category: 'Magazine / Art Direction',
+    title: 'Uphold',
+    category: 'Mentorship Platform',
     year: '2025',
-    client: 'Kern Publishing',
-    role: 'Art Direction, Editorial Design',
-    tools: ['InDesign', 'Photoshop', 'Risograph'],
-    summary: 'A 132-page art & design annual built on a flexible Swiss grid.',
-    description: [
-      'Reconnect is the flagship annual for an independent art-and-design publisher. The brief asked for a system elastic enough to hold thirty contributors — illustrators, photographers, type designers — without flattening their voices into a single house style.',
-      'The answer was a deliberately quiet 12-column grid with generous margins, a strict micro-typographic language for indices and credits, and a single accent colour deployed only where the eye needed punctuation. The contributors supply the noise; the grid keeps the silence.',
-      'Across the issue, full-bleed plates alternate with contact-sheet indices and offset thumbnails, so the reader feels the rhythm of turning to a new chapter rather than scrolling a feed.',
-    ],
-    pullQuote:
-      'The contributors supply the noise. The grid keeps the silence.',
-    accentColor: 'blue' as AccentColor,
-    coverImage: ph('reconnect-cover', 800, 1000),
-    images: [
-      { src: ph('reconnect-1', 1600, 1000), alt: 'Reconnect cover spread', layout: 'full' },
-      { src: ph('reconnect-2', 700, 900), alt: 'Table of contents detail', layout: 'offset', caption: 'Contents — set in tracked micro-type.' },
-      { src: ph('reconnect-3', 800, 600), alt: 'Contributor index page', layout: 'grid' },
-      { src: ph('reconnect-4', 800, 600), alt: 'Feature opener', layout: 'grid' },
-      { src: ph('reconnect-5', 800, 600), alt: 'Photo essay plate', layout: 'grid' },
-      { src: ph('reconnect-6', 1600, 1100), alt: 'Full-bleed photo essay', layout: 'full', caption: 'Photo essay, printed as a four-page gatefold.' },
-    ],
-  },
-  {
-    id: 'mexico-city',
-    index: '02',
-    title: 'Mexico in the Shift',
-    category: 'Photo Book / Editorial',
-    year: '2024',
-    client: 'Angewandte Press',
-    role: 'Design, Sequencing',
-    tools: ['InDesign', 'Capture One'],
-    summary: 'A risograph travel diary — pink endpapers, hand-set captions.',
-    description: [
-      'A self-initiated photo book documenting eight days in Mexico City. The design leans into the diaristic: a soft pink stock for the endpapers, a single inset photograph on the title page, and captions set small and close to the gutter like marginalia.',
-      'The sequencing does the heavy lifting — wide establishing frames give way to tight, saturated interiors, and the white space is allowed to breathe between them.',
-    ],
-    pullQuote: 'What happened? What got lost? What do you know after eight days?',
-    accentColor: 'pink' as AccentColor,
-    coverImage: ph('mexico-cover', 800, 1100),
-    images: [
-      { src: ph('mexico-1', 1500, 1000), alt: 'Pink endpaper spread', layout: 'full' },
-      { src: ph('mexico-2', 600, 800), alt: 'Inset title photograph', layout: 'offset' },
-      { src: ph('mexico-3', 1600, 1050), alt: 'Street photograph, full bleed', layout: 'full', caption: 'Roma Norte, day three.' },
-      { src: ph('mexico-4', 800, 600), alt: 'Interior detail', layout: 'grid' },
-      { src: ph('mexico-5', 800, 600), alt: 'Market study', layout: 'grid' },
-    ],
-  },
-  {
-    id: 'my-big-night',
-    index: '03',
-    title: 'My Big Night Out',
-    category: 'Campaign / Identity',
-    year: '2024',
-    client: 'Nocturna Beverages',
-    role: 'Design Lead, Typography',
-    tools: ['Illustrator', 'After Effects'],
-    summary: 'An inclusive nightlife campaign with a loud, saturated photographic language.',
-    description: [
-      'A campaign built around a simple idea: everyone deserves a great night out. The art direction pairs high-flash, colour-soaked photography with a restrained editorial layout, letting the images shout while the type stays composed.',
-      'The bilingual layout system sets headlines in the display serif and runs the body in tight justified columns, echoing a printed programme more than an ad.',
-    ],
-    pullQuote: 'The night is for everyone.',
-    accentColor: 'orange' as AccentColor,
-    coverImage: ph('night-cover', 800, 1000),
-    images: [
-      { src: ph('night-1', 1600, 1000), alt: 'Campaign key visual', layout: 'full' },
-      { src: ph('night-2', 800, 1000), alt: 'Saturated portrait', layout: 'offset', caption: 'Key art, on-location flash.' },
-      { src: ph('night-3', 800, 600), alt: 'Poster variant A', layout: 'grid' },
-      { src: ph('night-4', 800, 600), alt: 'Poster variant B', layout: 'grid' },
-      { src: ph('night-5', 800, 600), alt: 'Poster variant C', layout: 'grid' },
-    ],
-  },
-  {
-    id: 'rank-specimen',
-    index: '04',
-    title: 'Rank — A Specimen',
-    category: 'Type Design / Specimen',
-    year: '2023',
     client: 'Self-initiated',
-    role: 'Type Design, Specimen Design',
-    tools: ['Glyphs', 'InDesign'],
-    summary: 'A warm text serif in eight weights, with a printed specimen to match.',
+    role: 'UX Research, UI/UX',
+    tools: ['Figma', 'Maze'],
+    summary: 'Mentorship from industry experts.',
     description: [
-      'Rank is a warm, slightly humanist text serif drawn for long-form reading. The family spans Thin through Bold with a true Book Italic, and the specimen was designed to show it doing real work — not lorem ipsum, but essays, captions, and dense credit blocks.',
-      'The specimen itself became a study in restraint: a single accent colour, tight tracking on the labels, and enormous waterfall settings that let each weight earn its place on the page.',
+      'Uphold connects early-career talent with mentors who have actually done the work. The project began with research into how people look for guidance — and why most mentorship fizzles after the first call.',
+      'The answer was a low-friction matching flow and a calm scheduling experience that makes the next conversation the easy default, so momentum survives past week one.',
     ],
-    pullQuote: 'A typeface earns its keep in the small sizes, not the headlines.',
-    accentColor: 'green' as AccentColor,
-    coverImage: ph('rank-cover', 800, 1000),
-    images: [
-      { src: ph('rank-1', 1600, 1000), alt: 'Weight waterfall', layout: 'full', caption: 'Eight weights, Thin to Bold.' },
-      { src: ph('rank-2', 700, 900), alt: 'Italic detail', layout: 'offset' },
-      { src: ph('rank-3', 800, 600), alt: 'Glyph set', layout: 'grid' },
-      { src: ph('rank-4', 800, 600), alt: 'Text setting', layout: 'grid' },
-    ],
-  },
-  {
-    id: 'me-we',
-    index: '05',
-    title: 'Me / We',
-    category: 'Exhibition / Wayfinding',
-    year: '2023',
-    client: 'Stadtgalerie',
-    role: 'Exhibition Graphics, Signage',
-    tools: ['Illustrator', 'Cinema 4D'],
-    summary: 'Identity and wayfinding for a group show on collective authorship.',
-    description: [
-      'Me / We explored the tension between the individual maker and the collective. The graphic system mirrored that theme: a fixed grid that every contributor could disrupt, and a signage language that toggled between intimate captions and room-scale statements.',
-      'Vinyl lettering ran up the gallery columns as vertical spine labels, turning the architecture itself into a table of contents.',
-    ],
-    pullQuote: 'Where does the maker end and the room begin?',
-    accentColor: 'magenta' as AccentColor,
-    coverImage: ph('mewe-cover', 800, 1050),
-    images: [
-      { src: ph('mewe-1', 1600, 1000), alt: 'Gallery entrance graphics', layout: 'full' },
-      { src: ph('mewe-2', 700, 950), alt: 'Vertical column lettering', layout: 'offset', caption: 'Spine labels on the gallery columns.' },
-      { src: ph('mewe-3', 800, 600), alt: 'Wall caption system', layout: 'grid' },
-      { src: ph('mewe-4', 800, 600), alt: 'Catalogue spread', layout: 'grid' },
-      { src: ph('mewe-5', 800, 600), alt: 'Invitation card', layout: 'grid' },
-    ],
-  },
-  {
-    id: 'grafise-revu',
-    index: '06',
-    title: 'Grafise Revu',
-    category: 'Identity / Editorial',
-    year: '2022',
-    client: 'Swiss Typographic Society',
-    role: 'Redesign, Art Direction',
-    tools: ['InDesign', 'Risograph'],
-    summary: 'A homage-redesign of a mid-century Swiss typographic journal.',
-    description: [
-      'A speculative redesign of a 1960s Swiss typographic review. The work studies the originals — their flush-left grids, their phonetic experiments, their obsessive attention to the baseline — and rebuilds them for a contemporary press run.',
-      'The result keeps the cool rationalism of the source material but warms it with the Rank text face and a single, sparing accent.',
-    ],
-    pullQuote: 'Rationalism, warmed by one degree.',
+    pullQuote: 'Good mentorship dies in the gap between calls — so design the next call to be effortless.',
     accentColor: 'blue' as AccentColor,
-    coverImage: ph('grafise-cover', 800, 1100),
+    coverImage: ph('uphold-cover', 900, 1100),
+    externalUrl: 'https://www.behance.net/gallery/220593565/Uphold-(mentorship-from-industry-experts)',
     images: [
-      { src: ph('grafise-1', 1500, 1000), alt: 'Cover pair', layout: 'full', caption: 'Two issues, flush-left masthead.' },
-      { src: ph('grafise-2', 700, 900), alt: 'Grid study', layout: 'offset' },
-      { src: ph('grafise-3', 800, 600), alt: 'Phonetic experiment', layout: 'grid' },
-      { src: ph('grafise-4', 800, 600), alt: 'Baseline diagram', layout: 'grid' },
+      { src: ph('uphold-1', 1600, 1000), alt: 'Uphold matching flow', layout: 'full', caption: 'Mentor-matching flow.' },
+      { src: ph('uphold-2', 800, 1000), alt: 'Scheduling screen', layout: 'offset' },
+    ],
+  },
+  {
+    id: 'revibe',
+    index: '02',
+    title: 'Revibe',
+    category: 'Sustainable Fashion',
+    year: '2024',
+    client: 'Concept',
+    role: 'Product Design, Branding',
+    tools: ['Figma', 'Illustrator'],
+    summary: 'Save the planet by shopping, selling, and creating fashion.',
+    description: [
+      'Revibe is a circular-fashion marketplace where people shop, sell, and remake clothing — keeping garments in use and out of landfill.',
+      'The design balances the logistics of resale with a joyful, creative browse, so sustainability feels like an upgrade rather than a sacrifice.',
+    ],
+    pullQuote: 'Sustainability should feel like an upgrade, not a sacrifice.',
+    accentColor: 'green' as AccentColor,
+    coverImage: ph('revibe-cover', 900, 1100),
+    externalUrl: 'https://findingyouhemant.framer.website/page',
+    images: [
+      { src: ph('revibe-1', 1600, 1000), alt: 'Revibe marketplace', layout: 'full', caption: 'Shop · sell · create.' },
+      { src: ph('revibe-2', 800, 1000), alt: 'Listing flow', layout: 'offset' },
+    ],
+  },
+  {
+    id: 'insight',
+    index: '03',
+    title: 'Insight',
+    category: 'UX Research Tooling',
+    year: '2024',
+    client: 'Case study',
+    role: 'UX Research, UI/UX',
+    tools: ['Figma', 'Dovetail'],
+    summary: 'Streamlining participant recruitment in UX research.',
+    description: [
+      'Insight takes the most painful part of research — finding the right participants — and turns screening, scheduling, and incentives into a single flow.',
+      'Teams spend less time chasing people and more time learning from them, with a recruitment pipeline that stays honest about who actually qualifies.',
+    ],
+    pullQuote: 'The hardest part of research isn’t the questions — it’s finding the right people to ask.',
+    accentColor: 'magenta' as AccentColor,
+    coverImage: ph('insight-cover', 900, 1100),
+    externalUrl: 'https://findingyouhemant.framer.website/insight',
+    images: [
+      { src: ph('insight-1', 1600, 1000), alt: 'Recruitment pipeline', layout: 'full', caption: 'Screening → scheduling → incentives.' },
+      { src: ph('insight-2', 800, 1000), alt: 'Screener builder', layout: 'offset' },
+    ],
+  },
+  {
+    id: 'vejeez',
+    index: '04',
+    title: 'Vejeez!',
+    category: 'E-commerce',
+    year: '2023',
+    client: 'Concept',
+    role: 'Product Design, Branding',
+    tools: ['Figma'],
+    summary: 'Every vegan’s dream come true.',
+    description: [
+      'Vejeez! is a one-stop shop for vegan products — built so plant-based living stops meaning label-reading at every aisle.',
+      'The work spans the brand, a forgiving search-and-filter system, and a checkout that makes the right choice the easy one.',
+    ],
+    pullQuote: 'Make the kind choice the easy choice.',
+    accentColor: 'orange' as AccentColor,
+    coverImage: ph('vejeez-cover', 900, 1100),
+    externalUrl: 'https://www.notion.so/VEJEEZ-One-stop-shop-for-vegan-products-c287f50867854088b6fa4211cc7be3aa',
+    images: [
+      { src: ph('vejeez-1', 1600, 1000), alt: 'Vejeez storefront', layout: 'full', caption: 'One-stop vegan shop.' },
+      { src: ph('vejeez-2', 800, 1000), alt: 'Filter system', layout: 'offset' },
     ],
   },
 ]
 
 export const about: About = {
-  portrait: ph('portrait', 900, 1200), // TODO: replace with your portrait
+  portrait: ph('hemant-portrait', 900, 1200), // TODO: replace with a real portrait
   intro:
-    'I’m an editorial and brand designer working between print and screen, with a soft spot for grids, micro-typography, and the quiet drama of a well-set page.',
+    'I’m Hemant — a UX and product designer. I’ve been designing digital solutions since 2022, and I aspire to bring change, fun, and newness to the products I touch.',
   bio: [
-    'Bluetigercub is the studio practice of a designer trained in the Swiss tradition and seduced, somewhere along the way, by the warmth of independent magazines. I design publications, identities, and the occasional typeface — and I treat a website like a spread that happens to scroll.',
-    'My work tends to start with structure: a grid that can hold a lot of voices, a type system that behaves at 10px and at 10rem, a colour that earns its place by being used almost never. From there the content sets the pace.',
-    'Previously in-house at a publishing house and a type foundry, I now work with cultural institutions, independent publishers, and brands that would rather read like a journal than an ad.',
+    'I believe good design should come from any corner of the world. I plan to spend my life using it as a universal language — collaborating with people across cultures and contexts to create experiences that matter.',
+    'Across about three and a half years I’ve worked in ed-tech, fintech, e-commerce, design agencies, game design and SaaS — B2B, B2C and everything between — spanning user research, UI/UX, rapid prototyping, branding, illustration, and design strategy tied to real business goals.',
+    'I’m inspired by Don Norman’s 21st-century design thinking, and by film, travel, and the shared human experience. At heart, always an artist.',
   ],
   colophon: [
-    { label: 'Practice', value: 'Editorial & brand design' },
-    { label: 'Based in', value: 'Zürich / remote' },
-    { label: 'Display type', value: 'Bookmania' },
-    { label: 'Text type', value: 'Rank' },
-    { label: 'Built with', value: 'Vite · React · Tailwind' },
-    { label: 'Year', value: '2026' },
+    { label: 'Practice', value: 'UX & product design' },
+    { label: 'Experience', value: 'Since 2022 · ~3.5 yrs' },
+    { label: 'Industries', value: 'Ed-tech, fintech, e-comm, SaaS' },
+    { label: 'Toolkit', value: 'Research · UI/UX · prototyping' },
+    { label: 'Inspired by', value: 'Don Norman · film · travel' },
+    { label: 'Ethos', value: 'Design as a universal language' },
   ],
-  // Personal photos — one memory per year. Swap the seeds/sizes for your own.
   gallery: [
-    { src: ph('mem-2014', 800, 1000), year: '2014', caption: 'first desk — a borrowed kitchen table' },
-    { src: ph('mem-2016', 900, 640), year: '2016', caption: 'the riso broke, then we fixed it' },
-    { src: ph('mem-2017', 760, 760), year: '2017', caption: 'three weeks on a single specimen' },
-    { src: ph('mem-2019', 820, 1020), year: '2019', caption: 'Mexico City — eight days, one roll left' },
-    { src: ph('mem-2020', 900, 620), year: '2020', caption: 'the studio moved into a spare room' },
-    { src: ph('mem-2022', 840, 680), year: '2022', caption: 'first real press check' },
-    { src: ph('mem-2023', 720, 900), year: '2023', caption: 'ink swatches at 2 a.m.' },
-    { src: ph('mem-2025', 860, 760), year: '2025', caption: 'the process wall, finally full' },
+    { src: ph('hemant-1', 700, 880), caption: 'User flows', year: '2025' },
+    { src: ph('hemant-2', 700, 760), caption: 'Prototyping', year: '2024' },
+    { src: ph('hemant-3', 700, 900), caption: 'Research wall', year: '2024' },
+    { src: ph('hemant-4', 700, 680), caption: 'Branding', year: '2023' },
+    { src: ph('hemant-5', 700, 820), caption: 'Illustration', year: '2023' },
+    { src: ph('hemant-6', 700, 720), caption: 'Workshop', year: '2022' },
+    { src: ph('hemant-7', 700, 900), caption: 'Field notes', year: '2022' },
+    { src: ph('hemant-8', 700, 700), caption: 'Always an artist', year: '2025' },
   ],
 }
