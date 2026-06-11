@@ -87,13 +87,13 @@
 
   /* Editorial selection colour — a small blue punctuation moment */
   ::selection {
-    background: #4C5BFF;
-    color: #FAFAF8;
+    background: #0A0A0A;
+    color: #FFFFFF;
   }
 
   /* Visible, keyboard-friendly focus states everywhere */
   :focus-visible {
-    outline: 2px solid #4C5BFF;
+    outline: 2px solid #0A0A0A;
     outline-offset: 2px;
   }
 

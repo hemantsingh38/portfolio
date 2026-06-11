@@ -9,29 +9,29 @@ export default {
     // ─────────────────────────────────────────────────────────────
     extend: {
       colors: {
-        paper: '#FAFAF8', // clean soft white — the dominant surface
-        ink: '#17171B', // soft near-black with a cool undertone
-        blue: '#4C5BFF', // electric indigo — the fresh primary accent
-        // Fresh secondary accents — vivid but modern
-        pink:    '#FF5C8A',   // fresh rose
-        magenta: '#E0457E',
-        green:   '#19C8A6',   // mint-teal (replaces fluoro)
-        orange:  '#FF7A45',   // coral
-        red:     '#F23A4D',   // fresh red
-        yellow:  '#FFC93C',   // warm amber
-        // Pale zone tints — for soft pastel fields
-        'blue-pale':   '#E6E8FF',
-        'pink-pale':   '#FFE6EE',
-        'green-pale':  '#D8F7F0',
-        // a couple of derived tints for hairlines / muted micro-type
-        'ink-60': 'rgba(23, 23, 27, 0.60)',
-        'ink-40': 'rgba(23, 23, 27, 0.42)',
-        'ink-15': 'rgba(23, 23, 27, 0.13)',
-        'ink-08': 'rgba(23, 23, 27, 0.06)',
-        // Paper-on-dark variants for reversed sections
-        'paper-60': 'rgba(250, 250, 248, 0.62)',
-        'paper-40': 'rgba(250, 250, 248, 0.42)',
-        'paper-15': 'rgba(250, 250, 248, 0.16)',
+        paper: '#FFFFFF', // pure white — the only surface
+        ink: '#0A0A0A', // black — the only ink
+        // Monochrome: every accent collapses to black for a strict B&W system
+        blue:    '#0A0A0A',
+        pink:    '#0A0A0A',
+        magenta: '#0A0A0A',
+        green:   '#0A0A0A',
+        orange:  '#0A0A0A',
+        red:     '#0A0A0A',
+        yellow:  '#0A0A0A',
+        // Pale tints → faint grey fields
+        'blue-pale':   '#F4F4F4',
+        'pink-pale':   '#F4F4F4',
+        'green-pale':  '#F4F4F4',
+        // Greys derived from black, for hairlines / muted micro-type
+        'ink-60': 'rgba(10, 10, 10, 0.60)',
+        'ink-40': 'rgba(10, 10, 10, 0.42)',
+        'ink-15': 'rgba(10, 10, 10, 0.12)',
+        'ink-08': 'rgba(10, 10, 10, 0.05)',
+        // White-on-dark variants (rarely used now)
+        'paper-60': 'rgba(255, 255, 255, 0.62)',
+        'paper-40': 'rgba(255, 255, 255, 0.42)',
+        'paper-15': 'rgba(255, 255, 255, 0.16)',
       },
       fontFamily: {
         // Headings / display — Bookmania (Adobe Fonts/Typekit). See index.css.

@@ -4,13 +4,8 @@ import { siteConfig } from '../data/portfolio'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 /**
- * Contact — dark, reversed palette. The final resting note of the publication.
- *
- * Composition:
- *  • Near-black full-bleed zone (ink background, paper text)
- *  • Oversized display email address
- *  • Stacked social links in micro-type
- *  • Bottom colophon strip mirroring the header
+ * Connect — clean, minimal, black-on-white. An oversized email and a short
+ * line; nothing else.
  */
 export default function ContactSection() {
   const reduced = usePrefersReducedMotion()
@@ -19,100 +14,60 @@ export default function ContactSection() {
 
   const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
   const rise = (delay: number) => ({
-    initial: { opacity: 0, y: reduced ? 0 : 20 },
+    initial: { opacity: 0, y: reduced ? 0 : 18 },
     animate: inView ? { opacity: 1, y: 0 } : {},
-    transition: { duration: reduced ? 0.15 : 0.7, delay: reduced ? 0 : delay, ease },
+    transition: { duration: reduced ? 0.15 : 0.6, delay: reduced ? 0 : delay, ease },
   })
 
   return (
-    <section
-      id="contact"
-      ref={ref}
-      className="relative overflow-hidden bg-ink text-paper"
-      aria-label="Contact"
-    >
-      {/* Constructivist red wedge — after El Lissitzky's "Beat the Whites with the Red Wedge" */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute right-0 top-0 h-full w-[64%]" style={{ background: '#F23A4D', clipPath: 'polygon(100% 0, 100% 100%, 0 46%)' }} />
-        <div className="absolute left-[-6%] top-[66%] h-[3px] w-[56%] -rotate-[18deg]" style={{ background: 'rgba(247,245,240,0.7)' }} />
-      </div>
-      <div className="spread relative z-10 py-20 sm:py-32">
-        {/* Section marker */}
-        <motion.div
-          {...rise(0)}
-          className="flex items-end justify-between border-b-2 border-paper/30 pb-6"
-        >
-          <span className="label text-paper-60">Get in touch</span>
-          <span className="label text-paper-60">{siteConfig.issue}</span>
-        </motion.div>
+    <section id="contact" ref={ref} aria-label="Connect" className="min-h-screen bg-paper text-ink">
+      <div className="spread py-12 pb-28 sm:py-16 sm:pb-32">
+        <div className="flex items-end justify-between border-b border-ink pb-3">
+          <span className="label text-ink-60">Connect</span>
+          <span className="label text-ink-60">{siteConfig.issue}</span>
+        </div>
 
-        {/* Oversized folio */}
-        <motion.div {...rise(0.04)} className="mt-8 flex items-end gap-6">
-          <span aria-hidden className="folio text-paper">04</span>
-          <span className="label pb-2 leading-tight text-paper-60">
-            Connect
-            <br />
-            Homage 04 · Constructivism, 1919 — El Lissitzky
-          </span>
-        </motion.div>
-
-        {/* Headline */}
         <motion.p
           {...rise(0.06)}
-          className="mt-8 max-w-prose font-body text-xl leading-snug text-paper sm:text-2xl"
+          className="mt-12 max-w-[34ch] font-display text-2xl leading-[1.15] tracking-[-0.01em] sm:text-3xl"
         >
-          For commissions, collaborations, and conversations about print.
+          For commissions, collaborations, and conversations — say hello.
         </motion.p>
 
-        {/* Oversized email */}
         <motion.div {...rise(0.1)} className="mt-8">
           <a
             href={`mailto:${siteConfig.email}`}
-            className="group inline-block font-display leading-none text-paper"
-            style={{ fontSize: 'clamp(1.6rem, 5vw, 4.5rem)' }}
+            className="group inline-block font-display leading-none"
+            style={{ fontSize: 'clamp(1.7rem, 6vw, 4.75rem)' }}
           >
-            <span className="border-b-2 border-paper pb-1 transition-colors group-hover:border-paper-40">
+            <span className="border-b-2 border-ink pb-1 transition-colors group-hover:border-ink-40">
               {siteConfig.email}
             </span>
           </a>
         </motion.div>
 
-        {/* Socials */}
-        <motion.nav
-          {...rise(0.16)}
-          aria-label="Social links"
-          className="mt-14"
-        >
-          <ul className="flex flex-wrap gap-x-8 gap-y-4">
-            {siteConfig.socials.map((s) => (
-              <li key={s.label}>
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="label text-paper-60 transition-colors hover:text-paper"
-                >
-                  {s.label} ↗
-                </a>
-              </li>
-            ))}
-          </ul>
-        </motion.nav>
+        <motion.ul {...rise(0.16)} className="mt-12 flex flex-wrap gap-x-8 gap-y-3">
+          {siteConfig.socials.map((s) => (
+            <li key={s.label}>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="label text-ink-60 transition-colors hover:text-ink"
+              >
+                {s.label} ↗
+              </a>
+            </li>
+          ))}
+        </motion.ul>
 
-        {/* Bottom colophon strip */}
         <motion.div
-          {...rise(0.22)}
-          className="mt-24 flex flex-col items-start justify-between gap-4 border-t-2 border-paper/30 pt-6 sm:flex-row sm:items-center"
+          {...rise(0.2)}
+          className="mt-24 flex flex-col gap-3 border-t border-ink-15 pt-6 sm:flex-row sm:items-center sm:justify-between"
         >
-          <span className="label text-paper-60">
-            © {siteConfig.name} {new Date().getFullYear()}
-          </span>
-          <span className="label text-paper-60">
-            Set in Bookmania & Rank
-          </span>
-          <span className="label text-paper-60">
-            Built with Vite · React · Tailwind
-          </span>
+          <span className="label text-ink-40">© {siteConfig.name} {new Date().getFullYear()}</span>
+          <span className="label text-ink-40">Set in Bookmania &amp; Rank</span>
+          <span className="label text-ink-40">Built with Vite · React · Tailwind</span>
         </motion.div>
       </div>
     </section>
