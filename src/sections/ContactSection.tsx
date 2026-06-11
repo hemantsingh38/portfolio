@@ -28,23 +28,29 @@ export default function ContactSection() {
     <section
       id="contact"
       ref={ref}
-      className="bg-ink text-paper"
+      className="bg-blue text-paper"
       aria-label="Contact"
     >
       <div className="spread py-20 sm:py-32">
         {/* Section marker */}
         <motion.div
           {...rise(0)}
-          className="flex items-end justify-between border-b border-paper-15 pb-6"
+          className="flex items-end justify-between border-b-2 border-paper/30 pb-6"
         >
-          <span className="label text-paper-40">Get in touch</span>
-          <span className="label text-paper-40">{siteConfig.issue}</span>
+          <span className="label text-paper-60">Get in touch</span>
+          <span className="label text-paper-60">{siteConfig.issue}</span>
+        </motion.div>
+
+        {/* Oversized folio */}
+        <motion.div {...rise(0.04)} className="mt-8 flex items-end gap-6">
+          <span aria-hidden className="folio text-paper">04</span>
+          <span className="label pb-2 text-paper-60">Closing · Contact</span>
         </motion.div>
 
         {/* Headline */}
         <motion.p
           {...rise(0.06)}
-          className="mt-10 max-w-prose font-body text-xl leading-snug text-paper-60 sm:text-2xl"
+          className="mt-8 max-w-prose font-body text-xl leading-snug text-paper sm:text-2xl"
         >
           For commissions, collaborations, and conversations about print.
         </motion.p>
@@ -56,7 +62,7 @@ export default function ContactSection() {
             className="group inline-block font-display leading-none text-paper"
             style={{ fontSize: 'clamp(1.6rem, 5vw, 4.5rem)' }}
           >
-            <span className="border-b-2 border-paper-40 pb-1 transition-colors group-hover:border-paper">
+            <span className="border-b-2 border-paper pb-1 transition-colors group-hover:border-paper-40">
               {siteConfig.email}
             </span>
           </a>
@@ -87,15 +93,15 @@ export default function ContactSection() {
         {/* Bottom colophon strip */}
         <motion.div
           {...rise(0.22)}
-          className="mt-24 flex flex-col items-start justify-between gap-4 border-t border-paper-15 pt-6 sm:flex-row sm:items-center"
+          className="mt-24 flex flex-col items-start justify-between gap-4 border-t-2 border-paper/30 pt-6 sm:flex-row sm:items-center"
         >
-          <span className="label text-paper-40">
+          <span className="label text-paper-60">
             © {siteConfig.name} {new Date().getFullYear()}
           </span>
-          <span className="label text-paper-40">
+          <span className="label text-paper-60">
             Set in Bookmania & Rank
           </span>
-          <span className="label text-paper-40">
+          <span className="label text-paper-60">
             Built with Vite · React · Tailwind
           </span>
         </motion.div>

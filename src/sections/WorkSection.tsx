@@ -92,12 +92,14 @@ function ProjectExpand({ project, onClose }: { project: Project; onClose: () => 
         {/* Full-bleed lead image */}
         {full[0] && (
           <motion.div {...rise(0.14)} className="mb-8">
-            <LazyImage
-              src={full[0].src}
-              alt={full[0].alt}
-              className="aspect-[16/9] w-full"
-              imgClassName="object-cover"
-            />
+            <div className="border-[6px] border-current sm:border-8">
+              <LazyImage
+                src={full[0].src}
+                alt={full[0].alt}
+                className="aspect-[16/9] w-full"
+                imgClassName="object-cover"
+              />
+            </div>
             {full[0].caption && (
               <p className="label mt-2 opacity-60">{full[0].caption}</p>
             )}
@@ -112,7 +114,7 @@ function ProjectExpand({ project, onClose }: { project: Project; onClose: () => 
           {/* Body text */}
           <div className="col-span-12 lg:col-span-7">
             {project.description.map((para, i) => (
-              <p key={i} className="mb-5 font-body text-lg leading-relaxed">
+              <p key={i} className="body-justify mb-5 font-body text-lg leading-relaxed">
                 {para}
               </p>
             ))}
@@ -127,12 +129,14 @@ function ProjectExpand({ project, onClose }: { project: Project; onClose: () => 
           {/* Offset image (right column) */}
           {offset[0] && (
             <div className="col-span-12 self-start lg:col-span-4 lg:col-start-9">
-              <LazyImage
-                src={offset[0].src}
-                alt={offset[0].alt}
-                className="aspect-[3/4] w-full"
-                imgClassName="object-cover"
-              />
+              <div className="border-4 border-current">
+                <LazyImage
+                  src={offset[0].src}
+                  alt={offset[0].alt}
+                  className="aspect-[3/4] w-full"
+                  imgClassName="object-cover"
+                />
+              </div>
               {offset[0].caption && (
                 <p className="label mt-2 opacity-60">{offset[0].caption}</p>
               )}
@@ -220,7 +224,10 @@ export default function WorkSection() {
               {total} entries
             </span>
           </div>
-          <h2 className="display mt-6">Selected Work</h2>
+          <div className="mt-6 flex flex-wrap items-end gap-x-6 gap-y-1">
+            <span aria-hidden className="folio" style={{ color: zoneText }}>02</span>
+            <h2 className="display">Selected Work</h2>
+          </div>
         </motion.header>
 
         {/* Column headings */}
@@ -266,8 +273,8 @@ export default function WorkSection() {
                   >
                     {/* Index */}
                     <span
-                      className="index-num col-span-2 sm:col-span-1"
-                      style={{ opacity: 0.4 }}
+                      className="col-span-2 self-center font-display text-2xl leading-none sm:col-span-1 sm:text-[2rem]"
+                      style={{ opacity: 0.5 }}
                     >
                       {p.index}
                     </span>

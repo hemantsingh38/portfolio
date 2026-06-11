@@ -189,10 +189,16 @@ export default function AboutSection() {
         {/* Running header */}
         <motion.div
           {...rise(0)}
-          className="flex items-end justify-between border-b border-ink-15 pb-3 font-tight text-[10px] font-medium uppercase tracking-[0.16em] text-ink-60"
+          className="flex items-end justify-between border-b-2 border-ink pb-3 font-tight text-[10px] font-medium uppercase tracking-[0.16em] text-ink-60"
         >
           <span>{siteConfig.name} — About</span>
           <span>{siteConfig.issue}</span>
+        </motion.div>
+
+        {/* Oversized folio */}
+        <motion.div {...rise(0.04)} className="mt-6 flex items-end gap-5">
+          <span aria-hidden className="folio" style={{ color: '#FF2D78' }}>03</span>
+          <span className="pb-2 font-tight text-[11px] uppercase tracking-[0.16em] text-ink-40">The studio</span>
         </motion.div>
 
         <div className="relative mt-12 lg:min-h-[940px]">
@@ -265,7 +271,7 @@ export default function AboutSection() {
                   <LazyImage
                     src={g.src}
                     alt={g.caption ?? 'A memory'}
-                    className={`w-full ring-1 ring-ink-15 ${PHOTO_ASPECT}`}
+                    className={`w-full ring-2 ring-ink ${PHOTO_ASPECT}`}
                     imgClassName="object-cover"
                   />
                   <PhotoCaption n={i + 1} year={g.year} caption={g.caption} />
@@ -281,7 +287,7 @@ export default function AboutSection() {
                 <LazyImage
                   src={g.src}
                   alt={g.caption ?? 'A memory'}
-                  className={`w-full ring-1 ring-ink-15 ${PHOTO_ASPECT}`}
+                  className={`w-full ring-2 ring-ink ${PHOTO_ASPECT}`}
                   imgClassName="object-cover"
                 />
                 <PhotoCaption n={i + 1} year={g.year} caption={g.caption} />

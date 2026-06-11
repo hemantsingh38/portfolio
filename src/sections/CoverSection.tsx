@@ -46,11 +46,11 @@ export default function CoverSection() {
         {/* Top masthead rail */}
         <motion.div
           {...rise(0)}
-          className="flex items-end justify-between border-b border-ink-15 pb-4"
+          className="flex items-end justify-between border-b-2 border-ink pb-4"
         >
-          <span className="label">{siteConfig.issue}</span>
+          <span className="label-ink">{siteConfig.issue}</span>
           <span className="label hidden sm:block">{siteConfig.tagline}</span>
-          <span className="label">Folio · 01</span>
+          <span className="label-ink">Folio · 01</span>
         </motion.div>
 
         {/* Main masthead */}
@@ -74,14 +74,17 @@ export default function CoverSection() {
           </motion.span>
         </div>
 
-        {/* Sub-deck */}
-        <motion.p
+        {/* Sub-deck + oversized folio */}
+        <motion.div
           {...rise(0.16)}
-          className="mt-6 max-w-prose font-body text-lg leading-snug text-ink-60 sm:text-xl"
+          className="mt-8 flex items-start justify-between gap-10"
         >
-          {siteConfig.tagline} A studio practice in publications, identities,
-          and the occasional typeface — set with the patience of print.
-        </motion.p>
+          <p className="body-justify max-w-prose font-body text-lg leading-snug text-ink sm:text-xl">
+            {siteConfig.tagline} A studio practice in publications, identities,
+            and the occasional typeface — set with the patience of print.
+          </p>
+          <span aria-hidden className="folio hidden shrink-0 text-blue lg:block">01</span>
+        </motion.div>
 
         {/* Two-column asymmetric layout: cover lines + hero */}
         <motion.div
@@ -98,7 +101,7 @@ export default function CoverSection() {
                     className="group block"
                     aria-label={`Go to ${p.title}`}
                   >
-                    <span className="index-num text-ink-40">{p.index}</span>
+                    <span className="index-num text-blue">{p.index}</span>
                     <span className="mt-1 block font-display text-xl leading-tight transition-colors group-hover:text-blue">
                       {p.title}
                     </span>
@@ -118,7 +121,7 @@ export default function CoverSection() {
           {/* Right: hero image — overflows slightly into WorkSection */}
           <div className="order-1 col-span-12 sm:order-2 sm:col-span-9 lg:col-span-10">
             <Link to={`/work/${hero.id}`} className="group block">
-              <div className="overflow-hidden">
+              <div className="overflow-hidden border-[6px] border-blue sm:border-[10px]">
                 <motion.div style={reduced ? undefined : { y: heroY }}>
                   <LazyImage
                     src={hero.coverImage}
@@ -137,7 +140,7 @@ export default function CoverSection() {
         </motion.div>
 
         {/* Bleed line into next section */}
-        <div className="mt-16 border-t border-ink-15" aria-hidden="true" />
+        <div className="mt-16 border-t-2 border-ink" aria-hidden="true" />
       </div>
     </section>
   )

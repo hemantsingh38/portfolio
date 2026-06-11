@@ -143,6 +143,18 @@
   .spread {
     @apply mx-auto w-full max-w-spread px-5 sm:px-8 lg:px-14;
   }
+
+  /* Oversized folio numeral — the bold-editorial section marker */
+  .folio {
+    @apply font-display leading-[0.78] tracking-[-0.03em] tabular-nums;
+    font-size: clamp(3.5rem, 11vw, 10rem);
+  }
+
+  /* Justified running column with hyphenation — printed-page feel */
+  .body-justify {
+    text-align: justify;
+    hyphens: auto;
+  }
 }
 
 @layer utilities {

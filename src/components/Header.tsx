@@ -30,11 +30,11 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 bg-paper/90 backdrop-blur-sm">
       <div className="spread">
-        <div className="flex items-center justify-between border-b border-ink-15 py-3">
+        <div className="flex items-center justify-between border-b-2 border-ink py-3">
           {/* Masthead lockup */}
           <Link
             to="/"
-            className="font-display text-base leading-none tracking-[-0.01em] text-ink transition-colors hover:text-blue"
+            className="font-display text-lg font-medium leading-none tracking-[-0.01em] text-ink transition-colors hover:text-blue"
           >
             Bluetigercub
           </Link>
