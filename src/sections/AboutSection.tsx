@@ -22,19 +22,19 @@ import { useHasHover } from '../hooks/useHasHover'
 // meshes drift on a loop; a third mass tracks the pointer via --mx/--my.
 const AMBIENT_A: CSSProperties = {
   background:
-    'radial-gradient(38% 42% at 60% 40%, rgba(255,45,120,0.34), transparent 64%),' +
-    'radial-gradient(26% 30% at 38% 62%, rgba(255,90,150,0.26), transparent 66%)',
+    'radial-gradient(38% 42% at 60% 40%, rgba(255,92,138,0.34), transparent 64%),' +
+    'radial-gradient(26% 30% at 38% 62%, rgba(255,125,165,0.26), transparent 66%)',
   filter: 'blur(10px)',
 }
 const AMBIENT_B: CSSProperties = {
   background:
-    'radial-gradient(30% 34% at 74% 66%, rgba(255,120,170,0.24), transparent 68%),' +
-    'radial-gradient(22% 26% at 50% 30%, rgba(255,45,120,0.20), transparent 70%)',
+    'radial-gradient(30% 34% at 74% 66%, rgba(255,150,185,0.24), transparent 68%),' +
+    'radial-gradient(22% 26% at 50% 30%, rgba(255,92,138,0.20), transparent 70%)',
   filter: 'blur(12px)',
 }
 const CURSOR_FIELD: CSSProperties = {
   background:
-    'radial-gradient(34% 42% at var(--mx,50%) var(--my,42%), rgba(255,45,120,0.42), rgba(255,45,120,0.12) 50%, transparent 70%)',
+    'radial-gradient(34% 42% at var(--mx,50%) var(--my,42%), rgba(255,92,138,0.42), rgba(255,92,138,0.12) 50%, transparent 70%)',
   filter: 'blur(6px)',
 }
 
@@ -64,12 +64,12 @@ const PIXELS = [
 
 type Mark = { c: string; top: string; left: string; rot: number; size: number; color: string; o?: number }
 const MARKS: Mark[] = [
-  { c: '✳', top: '5%', left: '2%', rot: -12, size: 20, color: '#1A4BE8', o: 0.75 },
-  { c: '✦', top: '46%', left: '1%', rot: 14, size: 16, color: '#FF2D78' },
+  { c: '✳', top: '5%', left: '2%', rot: -12, size: 20, color: '#4C5BFF', o: 0.75 },
+  { c: '✦', top: '46%', left: '1%', rot: 14, size: 16, color: '#FF5C8A' },
   { c: '＋', top: '90%', left: '3%', rot: 0, size: 16, color: '#FF5A1F', o: 0.8 },
   { c: '✕', top: '10%', left: '95%', rot: 8, size: 16, color: '#141414', o: 0.45 },
   { c: '◆', top: '64%', left: '50%', rot: 0, size: 9, color: '#3DF03D' },
-  { c: '↗', top: '95%', left: '52%', rot: 0, size: 18, color: '#1A4BE8', o: 0.7 },
+  { c: '↗', top: '95%', left: '52%', rot: 0, size: 18, color: '#4C5BFF', o: 0.7 },
 ]
 
 function PhotoCaption({ n, year, caption }: { n: number; year?: string; caption?: string }) {
@@ -77,7 +77,7 @@ function PhotoCaption({ n, year, caption }: { n: number; year?: string; caption?
     <figcaption className="mt-1.5 max-w-[20ch] font-tight text-[10px] leading-[1.3] tracking-tight text-ink-60">
       <span className="tabular-nums text-ink-40">{String(n).padStart(2, '0')}</span>
       {year && (
-        <span className="ml-1.5 font-medium tabular-nums" style={{ color: '#FF2D78' }}>
+        <span className="ml-1.5 font-medium tabular-nums" style={{ color: '#FF5C8A' }}>
           {year}
         </span>
       )}
@@ -164,12 +164,12 @@ export default function AboutSection() {
         ))}
 
         {/* Memphis motifs — squiggle, dots, half-circle, triangle */}
-        <svg className="absolute hidden lg:block" style={{ top: '5%', left: '24%' }} width="124" height="34" viewBox="0 0 124 34" fill="none" stroke="#15C7C7" strokeWidth="5" strokeLinecap="round">
+        <svg className="absolute hidden lg:block" style={{ top: '5%', left: '24%' }} width="124" height="34" viewBox="0 0 124 34" fill="none" stroke="#19C8A6" strokeWidth="5" strokeLinecap="round">
           <path d="M3 17 q9 -15 18 0 t18 0 t18 0 t18 0 t18 0" />
         </svg>
         <span aria-hidden className="absolute hidden h-6 w-12 rounded-t-full bg-yellow sm:block" style={{ top: '58%', left: '34%' }} />
-        <span aria-hidden className="absolute hidden sm:block" style={{ top: '26%', left: '30%', width: 0, height: 0, borderLeft: '15px solid transparent', borderRight: '15px solid transparent', borderBottom: '25px solid #15C7C7' }} />
-        {[['13%', '33%', '#1A4BE8'], ['68%', '30%', '#FF2D78'], ['46%', '28%', '#FFD400']].map(([t, l, c], i) => (
+        <span aria-hidden className="absolute hidden sm:block" style={{ top: '26%', left: '30%', width: 0, height: 0, borderLeft: '15px solid transparent', borderRight: '15px solid transparent', borderBottom: '25px solid #19C8A6' }} />
+        {[['13%', '33%', '#4C5BFF'], ['68%', '30%', '#FF5C8A'], ['46%', '28%', '#FFC93C']].map(([t, l, c], i) => (
           <span key={`m-dot-${i}`} aria-hidden className="absolute hidden h-2.5 w-2.5 rounded-full sm:block" style={{ top: t, left: l, background: c }} />
         ))}
 
@@ -207,7 +207,7 @@ export default function AboutSection() {
 
         {/* Oversized folio */}
         <motion.div {...rise(0.04)} className="mt-6 flex items-end gap-5">
-          <span aria-hidden className="folio" style={{ color: '#FF2D78' }}>03</span>
+          <span aria-hidden className="folio" style={{ color: '#FF5C8A' }}>03</span>
           <span className="pb-2 font-tight text-[11px] uppercase leading-tight tracking-[0.16em] text-ink-40">
             The studio
             <br />
@@ -232,7 +232,7 @@ export default function AboutSection() {
             </p>
             {hasHover && !reduced && (
               <p className="mt-4 font-tight text-[11px] tracking-tight text-ink-40">
-                <span style={{ color: '#FF2D78' }}>✲</span> move your cursor — the paint is still wet
+                <span style={{ color: '#FF5C8A' }}>✲</span> move your cursor — the paint is still wet
               </p>
             )}
 
@@ -252,7 +252,7 @@ export default function AboutSection() {
               <h3 className="font-tight text-base font-bold tracking-[-0.02em]">Contact</h3>
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="mt-3 inline-block font-tight text-base font-medium tracking-[-0.01em] underline decoration-ink-15 underline-offset-4 transition-colors hover:decoration-[#FF2D78]"
+                className="mt-3 inline-block font-tight text-base font-medium tracking-[-0.01em] underline decoration-ink-15 underline-offset-4 transition-colors hover:decoration-[#FF5C8A]"
               >
                 {siteConfig.email}
               </a>

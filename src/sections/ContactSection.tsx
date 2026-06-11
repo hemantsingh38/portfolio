@@ -33,7 +33,7 @@ export default function ContactSection() {
     >
       {/* Constructivist red wedge — after El Lissitzky's "Beat the Whites with the Red Wedge" */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute right-0 top-0 h-full w-[64%]" style={{ background: '#E4002B', clipPath: 'polygon(100% 0, 100% 100%, 0 46%)' }} />
+        <div className="absolute right-0 top-0 h-full w-[64%]" style={{ background: '#F23A4D', clipPath: 'polygon(100% 0, 100% 100%, 0 46%)' }} />
         <div className="absolute left-[-6%] top-[66%] h-[3px] w-[56%] -rotate-[18deg]" style={{ background: 'rgba(247,245,240,0.7)' }} />
       </div>
       <div className="spread relative z-10 py-20 sm:py-32">

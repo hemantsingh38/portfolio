@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import LazyImage from '../components/LazyImage'
 import { projects, siteConfig } from '../data/portfolio'
 
 /**
@@ -11,27 +10,40 @@ import { projects, siteConfig } from '../data/portfolio'
  * blank. Each plate links to its full case-study spread.
  */
 
+const ACCENT_TEXT: Record<string, string> = {
+  blue: 'text-blue',
+  pink: 'text-pink',
+  magenta: 'text-magenta',
+  green: 'text-green',
+  orange: 'text-orange',
+}
+
 type Tile = {
   src: string
   code: string
   title: string
   category: string
   id: string
-  ar: string
+  h: number
+  accent: string
 }
 
-// Varied aspect ratios → irregular heights in the masonry columns.
-const AR = ['aspect-[4/5]', 'aspect-[1/1]', 'aspect-[3/4]', 'aspect-[5/4]', 'aspect-[2/3]', 'aspect-[5/6]']
+// Varied card heights → irregular masonry. Each card holds a tall page-style
+// preview that pans top→bottom on hover — a "scroll-through" of the full design
+// (à la godly.website). Swap the tall placeholders for real screenshots.
+const HS = [300, 384, 340, 420, 320, 360]
+const tall = (seed: string) => `https://picsum.photos/seed/${seed}/600/1600`
 
 const TILES: Tile[] = projects.flatMap((p, pi) => {
-  const srcs = [p.coverImage, ...p.images.map((im) => im.src)]
-  return srcs.map((src, i) => ({
-    src,
+  const n = 1 + p.images.length
+  return Array.from({ length: n }, (_, i) => ({
+    src: tall(`${p.id}-g${i}`),
     code: `${p.title[0].toUpperCase()}${pi + 1}·${String(110 + pi * 14 + i * 4)}`,
     title: p.title,
     category: p.category,
     id: p.id,
-    ar: AR[(pi + i) % AR.length],
+    h: HS[(pi + i) % HS.length],
+    accent: ACCENT_TEXT[p.accentColor] ?? 'text-ink-40',
   }))
 })
 
@@ -55,19 +67,25 @@ export default function WorkGallery() {
           <span className="label text-ink-40">{TILES.length} plates</span>
         </div>
 
-        {/* Irregular small gallery */}
-        <div className="mt-6 columns-2 gap-4 sm:columns-3 sm:gap-5 lg:columns-4 xl:columns-5">
+        {/* Scroll-through gallery — each card pans its preview top→bottom on hover */}
+        <div className="mt-6 columns-2 gap-5 sm:gap-6 lg:columns-3 xl:columns-4">
           {TILES.map((t, i) => (
-            <div key={i} className="mb-5 break-inside-avoid">
+            <div key={i} className="mb-6 break-inside-avoid">
               <Link to={`/work/${t.id}`} className="group block">
-                <LazyImage
-                  src={t.src}
-                  alt={`${t.title} — ${t.category}`}
-                  className={`w-full ring-1 ring-ink-15 transition group-hover:ring-ink ${t.ar}`}
-                  imgClassName="object-cover transition duration-500 group-hover:opacity-90"
-                />
-                <div className="mt-1.5 flex items-baseline justify-between gap-2">
-                  <span className="font-tight text-[10px] uppercase tabular-nums tracking-[0.1em] text-ink-40">
+                <div
+                  className="overflow-hidden rounded-2xl bg-ink-08 shadow-sm transition-shadow duration-300 group-hover:shadow-xl"
+                  style={{ height: t.h }}
+                >
+                  <img
+                    src={t.src}
+                    alt={`${t.title} — ${t.category}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover object-top transition-[object-position] duration-[4000ms] ease-linear group-hover:object-bottom"
+                  />
+                </div>
+                <div className="mt-2.5 flex items-baseline justify-between gap-2">
+                  <span className={`font-tight text-[10px] font-semibold uppercase tabular-nums tracking-[0.1em] ${t.accent}`}>
                     {t.code}
                   </span>
                   <span className="truncate font-tight text-[11px] font-medium tracking-[-0.01em] text-ink">
@@ -78,6 +96,7 @@ export default function WorkGallery() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   )
